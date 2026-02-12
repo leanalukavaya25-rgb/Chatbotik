@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title("🎯 Hobby & Interests Chatbot")
+st.title("Find your Hobby")
 st.write("Answer a few questions and I'll suggest hobbies for you!")
 
 # Questions
