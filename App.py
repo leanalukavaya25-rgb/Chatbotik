@@ -1,28 +1,43 @@
-questions = [
-    "How do you usually like to spend your free time?",
-    "Do you prefer creative or active hobbies?",
-    "Do you enjoy being outdoors?",
-    "Do you like working alone or with others?",
-    "How much time do you want to spend on a hobby each week?"
-]
+import streamlit as st
 
-def suggest_hobbies(answers):
+st.title("🎯 Hobby & Interests Chatbot")
+st.write("Answer a few questions and I'll suggest hobbies for you!")
+
+# Questions
+creative = st.selectbox("Do you prefer creative hobbies?", ["Yes", "No"])
+outdoor = st.selectbox("Do you enjoy being outdoors?", ["Yes", "No"])
+social = st.selectbox("Do you like working with other people?", ["Yes", "No"])
+time = st.selectbox("How much free time do you have each week?", 
+                    ["Less than 2 hours", "2-5 hours", "5+ hours"])
+
+# Button
+if st.button("Suggest Hobbies"):
     hobbies = []
 
-    if "creative" in answers.lower():
+    if creative == "Yes":
         hobbies.append("🎨 Drawing or Painting")
-    if "outdoor" in answers.lower():
-        hobbies.append("🌿 Hiking or Nature Walking")
-    if "people" in answers.lower() or "others" in answers.lower():
-        hobbies.append("🤝 Group Sports or Clubs")
-    if "alone" in answers.lower():
-        hobbies.append("📚 Reading or Journaling")
+        hobbies.append("🧵 DIY Crafts")
+
+    if outdoor == "Yes":
+        hobbies.append("🥾 Hiking")
+        hobbies.append("🌱 Gardening")
+
+    if social == "Yes":
+        hobbies.append("⚽ Team Sports")
+        hobbies.append("🎭 Drama Club")
+
+    if social == "No":
+        hobbies.append("📚 Reading")
+        hobbies.append("✍️ Journaling")
+
+    if time == "Less than 2 hours":
+        hobbies.append("🧩 Puzzles")
+    elif time == "5+ hours":
+        hobbies.append("🎸 Learning an Instrument")
 
     if not hobbies:
-        hobbies = [
-            "📸 Photography",
-            "✍️ Creative Writing",
-            "🧩 Puzzles or Games"
-        ]
+        hobbies.append("🎲 Board Games")
 
-    return hobbies
+    st.subheader("✨ Recommended Hobbies For You:")
+    for hobby in hobbies:
+        st.write(hobby)
