@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title("𓆝 𓆟 Find your Hobby𓆝 𓆟 𓆞")
+st.title("🎨🏀⚽  Find your Hobby ♟️👩🏻‍🍳🎾")
 st.write("Answer a few questions and I'll suggest hobbies for you!")
 
 # Questions
