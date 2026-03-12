@@ -1,17 +1,47 @@
 import streamlit as st
+from PIL import Image
 
-st.title("🎨🏀⚽  Find your Hobby ♟️👩🏻‍🍳🎾")
+# Page settings
+st.set_page_config(page_title="Find Your Hobby", page_icon="🎨", layout="centered")
+
+# Load Logo
+logo = Image.open("Logo.png")
+
+# Display Logo
+st.image(logo, width=250)
+
+# Title and description
+st.title("🎨🏀⚽ Find Your Hobby ♟️👩🏻‍🍳🎾")
 st.write("Answer a few questions and I'll suggest hobbies for you!")
 
-# Questions
-creative = st.selectbox("Do you prefer creative hobbies?", ["Yes", "No"])
-outdoor = st.selectbox("Do you enjoy being outdoors?", ["Yes", "No"])
-social = st.selectbox("Do you like working with other people?", ["Yes", "No"])
-time = st.selectbox("How much free time do you have each week?", 
-                    ["Less than 2 hours", "2-5 hours", "5+ hours"])
+st.divider()
 
-# Button
-if st.button("Suggest Hobbies"):
+# Questions
+creative = st.selectbox(
+    "Do you prefer creative hobbies?",
+    ["Yes", "No"]
+)
+
+outdoor = st.selectbox(
+    "Do you enjoy being outdoors?",
+    ["Yes", "No"]
+)
+
+social = st.selectbox(
+    "Do you like working with other people?",
+    ["Yes", "No"]
+)
+
+time = st.selectbox(
+    "How much free time do you have each week?",
+    ["Less than 2 hours", "2-5 hours", "5+ hours"]
+)
+
+st.divider()
+
+# Suggestion button
+if st.button("✨ Suggest Hobbies"):
+    
     hobbies = []
 
     if creative == "Yes":
@@ -32,6 +62,7 @@ if st.button("Suggest Hobbies"):
 
     if time == "Less than 2 hours":
         hobbies.append("🧩 Puzzles")
+
     elif time == "5+ hours":
         hobbies.append("🎸 Learning an Instrument")
 
@@ -39,5 +70,6 @@ if st.button("Suggest Hobbies"):
         hobbies.append("🎲 Board Games")
 
     st.subheader("✨ Recommended Hobbies For You:")
+
     for hobby in hobbies:
         st.write(hobby)
