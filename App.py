@@ -4,15 +4,16 @@ from PIL import Image
 # ------------------ PAGE CONFIG (FAVICON) ------------------
 st.set_page_config(
     page_title="Find Your Hobby",
-    page_icon="༺♰༻",  # ✅ Your custom favicon
+    page_icon="favicon.png",  # ✅ Your custom favicon file
     layout="centered"
 )
 
-# ------------------ LOAD & DISPLAY LOGO ------------------
+# ------------------ LOAD IMAGES ------------------
 logo = Image.open("Logo.png")
+
+# ------------------ HEADER ------------------
 st.image(logo, width=220)
 
-# ------------------ TITLE ------------------
 st.title("🎨🏀⚽ Find Your Hobby ♟️👩🏻‍🍳🎾")
 st.write("Answer a few questions and I'll suggest hobbies for you!")
 
@@ -69,6 +70,7 @@ if st.button("✨ Suggest Hobbies"):
     if not hobbies:
         hobbies.append("🎲 Board Games")
 
+    # ------------------ OUTPUT ------------------
     st.subheader("✨ Recommended Hobbies For You:")
 
     for hobby in hobbies:
