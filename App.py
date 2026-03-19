@@ -1,8 +1,12 @@
 import streamlit as st
 from PIL import Image
 
-# Page settings
-st.set_page_config(page_title="Find Your Hobby", page_icon="🎨", layout="centered")
+# Page settings (UPDATED ICON)
+st.set_page_config(
+    page_title="Find Your Hobby",
+    page_icon="༺♰༻",
+    layout="centered"
+)
 
 # Load Logo
 logo = Image.open("Logo.png")
