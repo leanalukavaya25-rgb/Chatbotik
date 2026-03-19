@@ -8,13 +8,13 @@ st.set_page_config(
     layout="centered"
 )
 
-# ------------------ CUSTOM CSS ------------------
+# ------------------ CUSTOM DARK BLUE CSS ------------------
 st.markdown("""
 <style>
 /* Main background and text */
 body, .stApp {
-    background-color: #e6f2ff;  /* very light blue */
-    color: #003366;              /* dark blue text */
+    background-color: #001f4d;  /* dark blue background */
+    color: #cce0ff;              /* light blue text */
 }
 
 /* Logo and title spacing */
@@ -24,22 +24,24 @@ body, .stApp {
 
 /* Selectboxes and text input */
 div.stSelectbox, div.stTextInput, div.stButton {
-    background-color: #cce6ff !important;  /* light blue box */
+    background-color: #003366 !important;  /* darker blue box */
     border-radius: 10px;
     padding: 0.3rem;
+    color: #cce0ff !important; /* text inside boxes */
 }
 
 /* Button */
 .stButton>button {
-    background-color: #3399ff;  /* blue */
-    color: white;
+    background-color: #0052cc;  /* vibrant dark blue */
+    color: #ffffff;
     font-weight: bold;
     border-radius: 10px;
+    padding: 0.5rem 1rem;
 }
 
 /* Hover effect on button */
 .stButton>button:hover {
-    background-color: #0066cc;  /* darker blue on hover */
+    background-color: #003d99;  /* darker hover */
 }
 
 /* Divider color */
@@ -49,7 +51,7 @@ hr {
 
 /* Subheader */
 h2, h3, h4 {
-    color: #003366;
+    color: #cce0ff;
 }
 </style>
 """, unsafe_allow_html=True)
