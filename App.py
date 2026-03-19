@@ -9,13 +9,20 @@ st.set_page_config(
     layout="centered"
 )
 
-# ------------------ CUSTOM CSS FOR VERY DARK OLIVE THEME ------------------
+# ------------------ CUSTOM CSS FOR VERY DARK OLIVE + BLUE THEME ------------------
 st.markdown("""
 <style>
-/* Main background and text */
+:root {
+    --main-bg: #1B2308;       /* very dark olive-green */
+    --secondary-bg: #2F3B0F;  /* slightly lighter olive */
+    --accent-blue: #1E3A8A;   /* subtle blue accent */
+    --text-color: #F5F5DC;    /* light beige */
+}
+
+/* App background and text */
 body, .stApp {
-    background-color: #1B2308;  /* very dark olive-green */
-    color: #F5F5DC;              /* light beige text */
+    background-color: var(--main-bg);
+    color: var(--text-color);
 }
 
 /* Logo spacing */
@@ -23,49 +30,52 @@ body, .stApp {
     margin-bottom: 2rem;
 }
 
-/* Selectboxes and text area styling */
-div.stSelectbox, div.stTextArea {
-    background-color: #2F3B0F !important;  /* slightly lighter for contrast */
+/* Selectboxes, text area, inputs */
+div.stSelectbox, div.stTextArea, input, textarea {
+    background-color: var(--secondary-bg) !important;
     border-radius: 12px;
     padding: 0.5rem;
-    color: #F5F5DC !important;
-}
-
-/* Text area input text */
-textarea {
-    background-color: #2F3B0F !important;
-    color: #F5F5DC !important;
+    color: var(--text-color) !important;
 }
 
 /* Button styling */
 .stButton>button {
-    background-color: #1B2308;
-    color: #F5F5DC;
+    background-color: var(--main-bg);
+    color: var(--text-color);
     font-weight: bold;
     border-radius: 12px;
     padding: 0.5rem 1rem;
+    border: 1px solid var(--accent-blue);
+    transition: all 0.2s ease;
 }
-
-/* Button hover effect */
 .stButton>button:hover {
-    background-color: #2F3B0F;
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--text-color);
 }
 
 /* Divider color */
 hr {
-    border: 1px solid #2F3B0F;
+    border: 1px solid var(--secondary-bg);
 }
 
-/* Subheaders */
-h2, h3, h4 {
-    color: #F5F5DC;
+/* Subheaders and titles */
+h1, h2, h3, h4 {
+    color: var(--text-color);
+}
+
+/* Links / accent text */
+a {
+    color: var(--accent-blue);
 }
 </style>
 """, unsafe_allow_html=True)
 
 # ------------------ LOAD LOGO ------------------
-logo = Image.open("Logo.png")
-st.image(logo, width=220)
+try:
+    logo = Image.open("Logo.png")
+    st.image(logo, width=220)
+except:
+    st.write("🏷️ Logo not found. Place 'Logo.png' in the folder.")
 
 # ------------------ TITLE ------------------
 st.title("🎨🏀⚽ Find Your Hobby ♟️👩🏻‍🍳🎾")
@@ -73,78 +83,94 @@ st.write("Answer these questions and I'll suggest hobbies just for you!")
 st.divider()
 
 # ------------------ QUESTIONS ------------------
-creative = st.selectbox("🎨 Do you prefer creative hobbies?", ["Yes", "No"])
-outdoor = st.selectbox("🌳 Do you enjoy being outdoors?", ["Yes", "No"])
-social = st.selectbox("👥 Do you like working with other people?", ["Yes", "No"])
-time = st.selectbox("⏳ Free time per week?", ["<2 hours", "2–5 hours", "5+ hours"])
+questions = {
+    "creative": "🎨 Do you prefer creative hobbies?",
+    "outdoor": "🌳 Do you enjoy being outdoors?",
+    "social": "👥 Do you like working with other people?",
+    "time": "⏳ Free time per week?",
+    "physical": "💪 Do you enjoy physical activity?",
+    "budget": "💰 Budget level?",
+    "learning": "📚 Do you enjoy learning new things?",
+    "technology": "💻 Interested in technology?",
+    "music": "🎵 Do you like music?",
+    "patience": "🧘 Are you patient?",
+    "competition": "🏆 Do you like competition?",
+    "travel": "✈️ Do you like traveling/exploring?",
+    "nature": "🌿 Do you like nature?",
+    "indoor": "🏠 Prefer indoor activities?",
+    "helping": "🤝 Do you enjoy helping others?"
+}
 
-physical = st.selectbox("💪 Do you enjoy physical activity?", ["Yes", "No"])
-budget = st.selectbox("💰 Budget level?", ["Low", "Medium", "High"])
-learning = st.selectbox("📚 Do you enjoy learning new things?", ["Yes", "No"])
-technology = st.selectbox("💻 Interested in technology?", ["Yes", "No"])
-music = st.selectbox("🎵 Do you like music?", ["Yes", "No"])
-patience = st.selectbox("🧘 Are you patient?", ["Yes", "No"])
-competition = st.selectbox("🏆 Do you like competition?", ["Yes", "No"])
-travel = st.selectbox("✈️ Do you like traveling/exploring?", ["Yes", "No"])
-nature = st.selectbox("🌿 Do you like nature?", ["Yes", "No"])
-indoor = st.selectbox("🏠 Prefer indoor activities?", ["Yes", "No"])
-helping = st.selectbox("🤝 Do you enjoy helping others?", ["Yes", "No"])
+options_dict = {
+    "YesNo": ["Yes", "No"],
+    "Time": ["<2 hours", "2–5 hours", "5+ hours"],
+    "Budget": ["Low", "Medium", "High"]
+}
 
-# ------------------ BIG TEXT AREA FOR EXTRA INPUT ------------------
+answers = {}
+for key, q in questions.items():
+    if key == "time":
+        answers[key] = st.selectbox(q, options_dict["Time"])
+    elif key == "budget":
+        answers[key] = st.selectbox(q, options_dict["Budget"])
+    else:
+        answers[key] = st.selectbox(q, options_dict["YesNo"])
+
+# ------------------ BIG TEXT AREA ------------------
 user_input = st.text_area(
     "💬 Tell me anything else about what you like:",
     height=150
 )
-
 st.divider()
 
-# ------------------ HOBBY SUGGESTION LOGIC ------------------
-if st.button("✨ Suggest Hobbies"):
+# ------------------ HOBBY SUGGESTION FUNCTION ------------------
+def suggest_hobbies(answers, user_text=""):
     hobbies = []
 
     # Base logic
-    if creative == "Yes":
+    if answers["creative"] == "Yes":
         hobbies += ["🎨 Painting", "🧵 Crafts", "✏️ Sketching"]
-    if outdoor == "Yes":
+    if answers["outdoor"] == "Yes":
         hobbies += ["🥾 Hiking", "🌱 Gardening"]
-    if social == "Yes":
+    if answers["social"] == "Yes":
         hobbies += ["⚽ Team Sports", "🎭 Drama"]
     else:
         hobbies += ["📚 Reading", "✍️ Journaling"]
-    if time == "<2 hours":
+
+    if answers["time"] == "<2 hours":
         hobbies.append("🧩 Puzzles")
-    elif time == "5+ hours":
+    elif answers["time"] == "5+ hours":
         hobbies.append("🎸 Learning an Instrument")
 
     # Extra logic
-    if physical == "Yes":
+    if answers["physical"] == "Yes":
         hobbies += ["🏋️ Gym", "🚴 Cycling"]
-    if budget == "Low":
+    if answers["budget"] == "Low":
         hobbies += ["📖 Reading", "✍️ Writing"]
-    elif budget == "High":
+    elif answers["budget"] == "High":
         hobbies += ["📷 Photography", "🎮 Gaming Setup"]
-    if learning == "Yes":
+    if answers["learning"] == "Yes":
         hobbies += ["🌍 Learning Languages", "🧠 Online Courses"]
-    if technology == "Yes":
+    if answers["technology"] == "Yes":
         hobbies += ["💻 Coding", "🤖 Robotics"]
-    if music == "Yes":
+    if answers["music"] == "Yes":
         hobbies += ["🎤 Singing", "🎧 Music Production"]
-    if patience == "Yes":
+    if answers["patience"] == "Yes":
         hobbies += ["♟️ Chess", "🧩 Model Building"]
-    if competition == "Yes":
+    if answers["competition"] == "Yes":
         hobbies += ["🏆 eSports", "🥊 Martial Arts"]
-    if travel == "Yes":
+    if answers["travel"] == "Yes":
         hobbies += ["🗺️ Exploring", "📸 Travel Blogging"]
-    if nature == "Yes":
+    if answers["nature"] == "Yes":
         hobbies += ["🌿 Nature Walks", "🐦 Bird Watching"]
-    if indoor == "Yes":
+    if answers["indoor"] == "Yes":
         hobbies += ["🎮 Gaming", "🎬 Movies"]
-    if helping == "Yes":
+    if answers["helping"] == "Yes":
         hobbies += ["🤝 Volunteering", "👶 Mentoring"]
 
-    # Smart text input logic
-    if user_input:
-        text = user_input.lower()
+    # Smart text input
+    if user_text:
+        text = user_text.lower()
         if "art" in text:
             hobbies.append("🎨 Digital Art")
         if "game" in text:
@@ -156,15 +182,19 @@ if st.button("✨ Suggest Hobbies"):
         if "music" in text:
             hobbies.append("🎼 Composing Music")
 
-    # Remove duplicates while keeping order
-    hobbies = list(OrderedDict.fromkeys(hobbies))
+    # Remove duplicates
+    return list(OrderedDict.fromkeys(hobbies))
 
-    # ------------------ OUTPUT ------------------
+# ------------------ DISPLAY HOBBIES ------------------
+if st.button("✨ Suggest Hobbies"):
+    hobbies = suggest_hobbies(answers, user_input)
+    
     st.subheader("✨ Recommended Hobbies For You:")
-
-    # Display in 3-column grid
-    cols = st.columns(3)
-    for i, hobby in enumerate(hobbies):
-        cols[i % 3].write(hobby)
-
-    st.success("🎉 Try a few and see what you love!")
+    
+    if not hobbies:
+        st.write("Hmm… we couldn't find a match! Try adding more details.")
+    else:
+        # Dynamic 3-column grid
+        cols = st.columns(3)
+        for i, hobby in enumerate(hobbies):
+            cols[i % 3].write(hobby)
