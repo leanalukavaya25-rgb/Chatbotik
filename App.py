@@ -8,6 +8,52 @@ st.set_page_config(
     layout="centered"
 )
 
+# ------------------ CUSTOM CSS ------------------
+st.markdown("""
+<style>
+/* Main background and text */
+body, .stApp {
+    background-color: #e6f2ff;  /* very light blue */
+    color: #003366;              /* dark blue text */
+}
+
+/* Logo and title spacing */
+.css-1d391kg {
+    margin-bottom: 2rem;
+}
+
+/* Selectboxes and text input */
+div.stSelectbox, div.stTextInput, div.stButton {
+    background-color: #cce6ff !important;  /* light blue box */
+    border-radius: 10px;
+    padding: 0.3rem;
+}
+
+/* Button */
+.stButton>button {
+    background-color: #3399ff;  /* blue */
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+/* Hover effect on button */
+.stButton>button:hover {
+    background-color: #0066cc;  /* darker blue on hover */
+}
+
+/* Divider color */
+hr {
+    border: 1px solid #3399ff;
+}
+
+/* Subheader */
+h2, h3, h4 {
+    color: #003366;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # ------------------ LOAD LOGO ------------------
 logo = Image.open("Logo.png")
 st.image(logo, width=220)
@@ -15,11 +61,9 @@ st.image(logo, width=220)
 # ------------------ TITLE ------------------
 st.title("🎨🏀⚽ Find Your Hobby ♟️👩🏻‍🍳🎾")
 st.write("Answer these questions and I'll suggest hobbies just for you!")
-
 st.divider()
 
 # ------------------ QUESTIONS ------------------
-
 creative = st.selectbox("🎨 Do you prefer creative hobbies?", ["Yes", "No"])
 outdoor = st.selectbox("🌳 Do you enjoy being outdoors?", ["Yes", "No"])
 social = st.selectbox("👥 Do you like working with other people?", ["Yes", "No"])
@@ -37,12 +81,10 @@ nature = st.selectbox("🌿 Do you like nature?", ["Yes", "No"])
 indoor = st.selectbox("🏠 Prefer indoor activities?", ["Yes", "No"])
 helping = st.selectbox("🤝 Do you enjoy helping others?", ["Yes", "No"])
 
-# ------------------ QUESTION BOX ------------------
 user_input = st.text_input("💬 Tell me anything else about what you like:")
-
 st.divider()
 
-# ------------------ BUTTON ------------------
+# ------------------ BUTTON LOGIC ------------------
 if st.button("✨ Suggest Hobbies"):
 
     hobbies = []
@@ -100,10 +142,9 @@ if st.button("✨ Suggest Hobbies"):
     if helping == "Yes":
         hobbies += ["🤝 Volunteering", "👶 Mentoring"]
 
-    # ------------------ SMART TEXT INPUT LOGIC ------------------
+    # Smart text input
     if user_input:
         text = user_input.lower()
-
         if "art" in text:
             hobbies.append("🎨 Digital Art")
         if "game" in text:
@@ -115,13 +156,16 @@ if st.button("✨ Suggest Hobbies"):
         if "music" in text:
             hobbies.append("🎼 Composing Music")
 
-    # Remove duplicates
-    hobbies = list(set(hobbies))
+    # Remove duplicates and preserve order
+    from collections import OrderedDict
+    hobbies = list(OrderedDict.fromkeys(hobbies))
 
     # ------------------ OUTPUT ------------------
     st.subheader("✨ Recommended Hobbies For You:")
 
-    for hobby in hobbies:
-        st.write(hobby)
+    # Display in 3-column grid
+    cols = st.columns(3)
+    for i, hobby in enumerate(hobbies):
+        cols[i % 3].write(hobby)
 
     st.success("🎉 Try a few and see what you love!")
