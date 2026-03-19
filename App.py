@@ -4,7 +4,7 @@ from collections import OrderedDict
 # ------------------ PAGE CONFIG ------------------
 st.set_page_config(
     page_title="Find Your Hobby",
-    page_icon="🎯",
+    page_icon="favicon.png",  # Local favicon
     layout="centered"
 )
 
@@ -23,7 +23,7 @@ def set_bg(image_url):
         unsafe_allow_html=True
     )
 
-# Sunset background (unchanged)
+# Sunset background
 set_bg("https://images.unsplash.com/photo-1688654966974-1770f23f3943?auto=format&fit=crop&w=1350&q=80")
 
 # ------------------ CUSTOM CSS ------------------
@@ -44,7 +44,7 @@ body, .stApp {
     color: var(--text-color);
 }
 
-/* Bubble style for selectboxes, text area, inputs */
+/* Bubble style inputs and text areas */
 div.stSelectbox, div.stTextArea, input, textarea {
     background-color: var(--input-bg) !important;
     border-radius: 30px;
@@ -154,7 +154,7 @@ def suggest_hobbies(answers, age, fitness, user_text=""):
     # Outdoor / Nature
     if answers["outdoor"] == "Yes":
         hobbies += ["🥾 Hiking", "🌱 Gardening"]
-        if age <= 45 and fitness != "Low":  # only suggest physical if under 45 or moderate fitness
+        if age <= 45 and fitness != "Low":  # only suggest hard physical activities if age <=45
             hobbies += ["🏋️ Gym", "🚴 Cycling", "🏊 Swimming"]
 
     # Social / Indoor
