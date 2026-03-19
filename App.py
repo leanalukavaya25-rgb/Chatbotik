@@ -9,13 +9,13 @@ st.set_page_config(
     layout="centered"
 )
 
-# ------------------ CUSTOM CSS FOR DARK OLIVE GREEN THEME ------------------
+# ------------------ CUSTOM CSS FOR DEEP OLIVE GREEN THEME ------------------
 st.markdown("""
 <style>
 /* Main background and text */
 body, .stApp {
-    background-color: #556B2F;  /* dark classic olive green background */
-    color: #F5F5DC;              /* beige/light text for contrast */
+    background-color: #3B4B0F;  /* deep dark olive green background */
+    color: #F5F5DC;              /* light beige text for contrast */
 }
 
 /* Logo spacing */
@@ -25,7 +25,7 @@ body, .stApp {
 
 /* Selectboxes and text area styling */
 div.stSelectbox, div.stTextArea {
-    background-color: #6B8E23 !important;  /* lighter olive boxes */
+    background-color: #556B2F !important;  /* slightly lighter dark olive boxes */
     border-radius: 12px;
     padding: 0.5rem;
     color: #F5F5DC !important;             /* text inside boxes */
@@ -33,13 +33,13 @@ div.stSelectbox, div.stTextArea {
 
 /* Text area input text */
 textarea {
-    background-color: #6B8E23 !important;
+    background-color: #556B2F !important;
     color: #F5F5DC !important;
 }
 
 /* Button styling */
 .stButton>button {
-    background-color: #556B2F;  /* dark olive button */
+    background-color: #3B4B0F;  /* match darkest olive for button */
     color: #F5F5DC;
     font-weight: bold;
     border-radius: 12px;
@@ -48,12 +48,12 @@ textarea {
 
 /* Button hover effect */
 .stButton>button:hover {
-    background-color: #6B8E23;  /* lighter olive on hover */
+    background-color: #556B2F;  /* lighter olive on hover */
 }
 
 /* Divider color */
 hr {
-    border: 1px solid #6B8E23;
+    border: 1px solid #556B2F;
 }
 
 /* Subheaders */
@@ -93,7 +93,7 @@ helping = st.selectbox("🤝 Do you enjoy helping others?", ["Yes", "No"])
 # ------------------ BIG TEXT AREA FOR EXTRA INPUT ------------------
 user_input = st.text_area(
     "💬 Tell me anything else about what you like:",
-    height=150  # bigger input box
+    height=150
 )
 
 st.divider()
@@ -105,15 +105,12 @@ if st.button("✨ Suggest Hobbies"):
     # Base logic
     if creative == "Yes":
         hobbies += ["🎨 Painting", "🧵 Crafts", "✏️ Sketching"]
-
     if outdoor == "Yes":
         hobbies += ["🥾 Hiking", "🌱 Gardening"]
-
     if social == "Yes":
         hobbies += ["⚽ Team Sports", "🎭 Drama"]
     else:
         hobbies += ["📚 Reading", "✍️ Journaling"]
-
     if time == "<2 hours":
         hobbies.append("🧩 Puzzles")
     elif time == "5+ hours":
@@ -122,36 +119,26 @@ if st.button("✨ Suggest Hobbies"):
     # Extra logic
     if physical == "Yes":
         hobbies += ["🏋️ Gym", "🚴 Cycling"]
-
     if budget == "Low":
         hobbies += ["📖 Reading", "✍️ Writing"]
     elif budget == "High":
         hobbies += ["📷 Photography", "🎮 Gaming Setup"]
-
     if learning == "Yes":
         hobbies += ["🌍 Learning Languages", "🧠 Online Courses"]
-
     if technology == "Yes":
         hobbies += ["💻 Coding", "🤖 Robotics"]
-
     if music == "Yes":
         hobbies += ["🎤 Singing", "🎧 Music Production"]
-
     if patience == "Yes":
         hobbies += ["♟️ Chess", "🧩 Model Building"]
-
     if competition == "Yes":
         hobbies += ["🏆 eSports", "🥊 Martial Arts"]
-
     if travel == "Yes":
         hobbies += ["🗺️ Exploring", "📸 Travel Blogging"]
-
     if nature == "Yes":
         hobbies += ["🌿 Nature Walks", "🐦 Bird Watching"]
-
     if indoor == "Yes":
         hobbies += ["🎮 Gaming", "🎬 Movies"]
-
     if helping == "Yes":
         hobbies += ["🤝 Volunteering", "👶 Mentoring"]
 
