@@ -5,105 +5,88 @@ from collections import OrderedDict
 # ------------------ PAGE CONFIG ------------------
 st.set_page_config(
     page_title="Find Your Hobby",
-    page_icon="🎯",
+    page_icon="favicon.png",
     layout="centered"
 )
 
-# ------------------ SET SUNSET BACKGROUND ------------------
-def set_bg(image_url):
-    """
-    Set a full-screen sunset background image
-    """
-    st.markdown(
-        f"""
-        <style>
-        .stApp {{
-            background: url("{image_url}") no-repeat center center fixed;
-            background-size: cover;
-            background-attachment: fixed;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-# Use beautiful sunset sunset background
-set_bg("https://images.unsplash.com/photo-1688654966974-1770f23f3943?auto=format&fit=crop&w=1350&q=80")
-
-# ------------------ CUSTOM CSS ------------------
+# ------------------ CUSTOM CSS FOR ULTRA DARK OLIVE + DEEP BLUE THEME ------------------
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
 :root {
-    --accent-blue: #1E3A8A;
-    --hover-blue: #2746B0;
-    --text-color: #FFFFFF;
-    --card-bg: rgba(0, 0, 0, 0.6);
-    --input-bg: rgba(0, 0, 0, 0.5);
+    --main-bg: #0B1208;       /* near-black olive-green */
+    --secondary-bg: #16220F;  /* slightly lighter olive for inputs */
+    --accent-blue: #1E3A8A;   /* deep blue accent */
+    --text-color: #E5E5E5;    /* off-white text */
 }
 
+/* App background and text */
 body, .stApp {
-    font-family: 'Roboto', sans-serif;
+    background-color: var(--main-bg);
     color: var(--text-color);
 }
 
-/* Inputs & selects */
+/* Logo spacing */
+.css-1d391kg {
+    margin-bottom: 2rem;
+}
+
+/* Selectboxes, text area, inputs */
 div.stSelectbox, div.stTextArea, input, textarea {
-    background-color: var(--input-bg) !important;
+    background-color: var(--secondary-bg) !important;
     border-radius: 12px;
-    padding: 0.6rem;
+    padding: 0.5rem;
     color: var(--text-color) !important;
 }
 
-/* Button */
+/* Button styling */
 .stButton>button {
-    background-color: var(--accent-blue);
+    background-color: var(--main-bg);
     color: var(--text-color);
     font-weight: bold;
-    border-radius: 16px;
-    padding: 0.7rem 1.2rem;
-    border: none;
-    transition: all 0.3s ease;
+    border-radius: 12px;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--accent-blue);
+    transition: all 0.2s ease;
 }
 .stButton>button:hover {
-    background-color: var(--hover-blue);
-    transform: translateY(-2px);
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--text-color);
 }
 
-/* Divider */
+/* Divider color */
 hr {
-    border: 1px solid var(--hover-blue);
+    border: 1px solid var(--secondary-bg);
 }
 
-/* Hobby cards */
-.hobby-card {
-    background-color: var(--card-bg);
-    border-radius: 16px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    text-align: center;
-    font-weight: 600;
-    font-size: 18px;
-    transition: all 0.3s ease;
+/* Subheaders and titles */
+h1, h2, h3, h4 {
+    color: var(--text-color);
 }
-.hobby-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+
+/* Links / accent text */
+a {
+    color: var(--accent-blue);
 }
 </style>
 """, unsafe_allow_html=True)
 
+# ------------------ LOAD LOGO ------------------
+try:
+    logo = Image.open("Logo.png")
+    st.image(logo, width=220)
+except:
+    st.write("🏷️ Logo not found. Place 'Logo.png' in the folder.")
+
 # ------------------ TITLE ------------------
-st.markdown("<h1 style='text-align:center'>🎨 Find Your Perfect Hobby 🌅</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align:center;'>Answer a few questions and let me recommend hobbies just for you!</p>", unsafe_allow_html=True)
+st.title("🎨🏀⚽ Find Your Hobby ♟️👩🏻‍🍳🎾")
+st.write("Answer these questions and I'll suggest hobbies just for you!")
 st.divider()
 
 # ------------------ QUESTIONS ------------------
 questions = {
     "creative": "🎨 Do you prefer creative hobbies?",
     "outdoor": "🌳 Do you enjoy being outdoors?",
-    "social": "👥 Do you like working with others?",
+    "social": "👥 Do you like working with other people?",
     "time": "⏳ Free time per week?",
     "physical": "💪 Do you enjoy physical activity?",
     "budget": "💰 Budget level?",
@@ -112,13 +95,13 @@ questions = {
     "music": "🎵 Do you like music?",
     "patience": "🧘 Are you patient?",
     "competition": "🏆 Do you like competition?",
-    "travel": "✈️ Do you like exploring?",
+    "travel": "✈️ Do you like traveling/exploring?",
     "nature": "🌿 Do you like nature?",
     "indoor": "🏠 Prefer indoor activities?",
     "helping": "🤝 Do you enjoy helping others?"
 }
 
-options = {
+options_dict = {
     "YesNo": ["Yes", "No"],
     "Time": ["<2 hours", "2–5 hours", "5+ hours"],
     "Budget": ["Low", "Medium", "High"]
@@ -127,49 +110,92 @@ options = {
 answers = {}
 for key, q in questions.items():
     if key == "time":
-        answers[key] = st.selectbox(q, options["Time"])
+        answers[key] = st.selectbox(q, options_dict["Time"])
     elif key == "budget":
-        answers[key] = st.selectbox(q, options["Budget"])
+        answers[key] = st.selectbox(q, options_dict["Budget"])
     else:
-        answers[key] = st.selectbox(q, options["YesNo"])
+        answers[key] = st.selectbox(q, options_dict["YesNo"])
 
-user_input = st.text_area("💬 Tell me more about your interests:", height=130)
+# ------------------ BIG TEXT AREA ------------------
+user_input = st.text_area(
+    "💬 Tell me anything else about what you like:",
+    height=150
+)
 st.divider()
 
-# ------------------ HOBBY SUGGESTION ------------------
+# ------------------ HOBBY SUGGESTION FUNCTION ------------------
 def suggest_hobbies(answers, user_text=""):
     hobbies = []
-    if answers["creative"] == "Yes": hobbies += ["🎨 Painting", "🧵 Crafts"]
-    if answers["outdoor"] == "Yes": hobbies += ["🥾 Hiking", "🌱 Gardening"]
-    if answers["social"] == "Yes": hobbies += ["⚽ Team Sports", "🎭 Drama"]
-    else: hobbies += ["📚 Reading", "✍️ Journaling"]
-    if answers["time"] == "<2 hours": hobbies.append("🧩 Puzzles")
-    elif answers["time"] == "5+ hours": hobbies.append("🎸 Learning an Instrument")
-    if answers["physical"] == "Yes": hobbies += ["🏃 Running", "🏊 Swimming"]
-    if answers["budget"] == "Low": hobbies += ["📖 Reading", "✍️ Writing"]
-    elif answers["budget"] == "High": hobbies += ["📷 Photography", "🎮 Gaming"]
-    if answers["learning"] == "Yes": hobbies += ["🌍 Language Learning", "🧠 Courses"]
-    if answers["technology"] == "Yes": hobbies += ["💻 Coding", "🤖 Robotics"]
-    if answers["music"] == "Yes": hobbies += ["🎤 Singing", "🎧 Music Production"]
-    if answers["patience"] == "Yes": hobbies += ["♟️ Chess", "🧩 Model Building"]
-    if answers["competition"] == "Yes": hobbies += ["🏆 eSports", "🥊 Martial Arts"]
-    if answers["travel"] == "Yes": hobbies += ["🗺️ Exploring", "📸 Travel Blogging"]
-    if answers["nature"] == "Yes": hobbies += ["🌿 Bird Watching", "🍃 Nature Walks"]
-    if answers["indoor"] == "Yes": hobbies += ["🎮 Gaming", "🎬 Movies"]
-    if answers["helping"] == "Yes": hobbies += ["🤝 Volunteering", "👶 Mentoring"]
+
+    # Base logic
+    if answers["creative"] == "Yes":
+        hobbies += ["🎨 Painting", "🧵 Crafts", "✏️ Sketching"]
+    if answers["outdoor"] == "Yes":
+        hobbies += ["🥾 Hiking", "🌱 Gardening"]
+    if answers["social"] == "Yes":
+        hobbies += ["⚽ Team Sports", "🎭 Drama"]
+    else:
+        hobbies += ["📚 Reading", "✍️ Journaling"]
+
+    if answers["time"] == "<2 hours":
+        hobbies.append("🧩 Puzzles")
+    elif answers["time"] == "5+ hours":
+        hobbies.append("🎸 Learning an Instrument")
+
+    # Extra logic
+    if answers["physical"] == "Yes":
+        hobbies += ["🏋️ Gym", "🚴 Cycling"]
+    if answers["budget"] == "Low":
+        hobbies += ["📖 Reading", "✍️ Writing"]
+    elif answers["budget"] == "High":
+        hobbies += ["📷 Photography", "🎮 Gaming Setup"]
+    if answers["learning"] == "Yes":
+        hobbies += ["🌍 Learning Languages", "🧠 Online Courses"]
+    if answers["technology"] == "Yes":
+        hobbies += ["💻 Coding", "🤖 Robotics"]
+    if answers["music"] == "Yes":
+        hobbies += ["🎤 Singing", "🎧 Music Production"]
+    if answers["patience"] == "Yes":
+        hobbies += ["♟️ Chess", "🧩 Model Building"]
+    if answers["competition"] == "Yes":
+        hobbies += ["🏆 eSports", "🥊 Martial Arts"]
+    if answers["travel"] == "Yes":
+        hobbies += ["🗺️ Exploring", "📸 Travel Blogging"]
+    if answers["nature"] == "Yes":
+        hobbies += ["🌿 Nature Walks", "🐦 Bird Watching"]
+    if answers["indoor"] == "Yes":
+        hobbies += ["🎮 Gaming", "🎬 Movies"]
+    if answers["helping"] == "Yes":
+        hobbies += ["🤝 Volunteering", "👶 Mentoring"]
+
+    # Smart text input
     if user_text:
         text = user_text.lower()
-        if "art" in text: hobbies.append("🎨 Digital Art")
-        if "cook" in text: hobbies.append("👩‍🍳 Cooking")
-        if "game" in text: hobbies.append("🎮 Game Dev")
+        if "art" in text:
+            hobbies.append("🎨 Digital Art")
+        if "game" in text:
+            hobbies.append("🎮 Game Development")
+        if "cook" in text:
+            hobbies.append("👩‍🍳 Cooking")
+        if "sport" in text:
+            hobbies.append("⚽ Sports Practice")
+        if "music" in text:
+            hobbies.append("🎼 Composing Music")
+
+    # Remove duplicates
     return list(OrderedDict.fromkeys(hobbies))
 
+# ------------------ DISPLAY HOBBIES ------------------
 if st.button("✨ Suggest Hobbies"):
-    results = suggest_hobbies(answers, user_input)
-    st.subheader("🌅 Recommended Hobbies For You:")
-    if not results:
-        st.write("Try adding more details!")
+    hobbies = suggest_hobbies(answers, user_input)
+    
+    st.subheader("✨ Recommended Hobbies For You:")
+    
+    if not hobbies:
+        st.write("Hmm… we couldn't find a match! Try adding more details.")
     else:
+        # Dynamic 3-column grid
         cols = st.columns(3)
-        for i, hobby in enumerate(results):
-            cols[i % 3].markdown(f"<div class='hobby-card'>{hobby}</div>", unsafe_allow_html=True)
+        for i, hobby in enumerate(hobbies):
+            cols[i % 3].write(hobby) 
+
