@@ -9,14 +9,14 @@ st.set_page_config(
     layout="centered"
 )
 
-# ------------------ CUSTOM CSS FOR VERY DARK OLIVE + BLUE THEME ------------------
+# ------------------ CUSTOM CSS FOR ULTRA DARK OLIVE + DEEP BLUE THEME ------------------
 st.markdown("""
 <style>
 :root {
-    --main-bg: #1B2308;       /* very dark olive-green */
-    --secondary-bg: #2F3B0F;  /* slightly lighter olive */
-    --accent-blue: #1E3A8A;   /* subtle blue accent */
-    --text-color: #F5F5DC;    /* light beige */
+    --main-bg: #0B1208;       /* near-black olive-green */
+    --secondary-bg: #16220F;  /* slightly lighter olive for inputs */
+    --accent-blue: #1E3A8A;   /* deep blue accent */
+    --text-color: #E5E5E5;    /* off-white text */
 }
 
 /* App background and text */
