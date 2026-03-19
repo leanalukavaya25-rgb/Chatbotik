@@ -5,81 +5,105 @@ from collections import OrderedDict
 # ------------------ PAGE CONFIG ------------------
 st.set_page_config(
     page_title="Find Your Hobby",
-    page_icon="favicon.png",
+    page_icon="🎯",
     layout="centered"
 )
 
-# ------------------ CUSTOM CSS FOR ULTRA DARK OLIVE + DEEP BLUE THEME ------------------
+# ------------------ BACKGROUND IMAGE ------------------
+def set_bg(image_file):
+    """
+    Set background image for Streamlit app
+    """
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background: url("{image_file}") no-repeat center center fixed;
+            background-size: cover;
+            background-attachment: fixed;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+# You can use a local image or a URL
+# Example local: set_bg("background.jpg")
+# Example URL: set_bg("https://images.unsplash.com/photo-1506744038136-46273834b3fb")
+set_bg("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1350&q=80")
+
+# ------------------ CUSTOM CSS ------------------
 st.markdown("""
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
 :root {
-    --main-bg: #0B1208;       /* near-black olive-green */
-    --secondary-bg: #16220F;  /* slightly lighter olive for inputs */
-    --accent-blue: #1E3A8A;   /* deep blue accent */
+    --accent-blue: #1E3A8A;   /* subtle blue */
+    --hover-blue: #2746B0;    /* hover glow */
     --text-color: #E5E5E5;    /* off-white text */
+    --card-bg: rgba(31, 44, 20, 0.8); /* semi-transparent card */
+    --input-bg: rgba(22, 34, 15, 0.8); /* semi-transparent input */
 }
 
-/* App background and text */
+/* App font */
 body, .stApp {
-    background-color: var(--main-bg);
+    font-family: 'Roboto', sans-serif;
     color: var(--text-color);
 }
 
-/* Logo spacing */
-.css-1d391kg {
-    margin-bottom: 2rem;
-}
-
-/* Selectboxes, text area, inputs */
+/* Input & selectboxes */
 div.stSelectbox, div.stTextArea, input, textarea {
-    background-color: var(--secondary-bg) !important;
-    border-radius: 12px;
-    padding: 0.5rem;
+    background-color: var(--input-bg) !important;
+    border-radius: 14px;
+    padding: 0.6rem;
     color: var(--text-color) !important;
+    font-size: 16px;
 }
 
 /* Button styling */
 .stButton>button {
-    background-color: var(--main-bg);
+    background-color: var(--accent-blue);
     color: var(--text-color);
     font-weight: bold;
-    border-radius: 12px;
-    padding: 0.5rem 1rem;
-    border: 1px solid var(--accent-blue);
-    transition: all 0.2s ease;
+    border-radius: 16px;
+    padding: 0.7rem 1.2rem;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.5);
 }
 .stButton>button:hover {
-    background-color: var(--secondary-bg);
-    border: 1px solid var(--text-color);
+    background-color: var(--hover-blue);
+    box-shadow: 0 6px 20px rgba(39, 70, 176, 0.7);
+    transform: translateY(-2px);
 }
 
 /* Divider color */
 hr {
-    border: 1px solid var(--secondary-bg);
+    border: 1px solid var(--hover-blue);
 }
 
-/* Subheaders and titles */
-h1, h2, h3, h4 {
-    color: var(--text-color);
+/* Hobby cards */
+.hobby-card {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.5);
 }
-
-/* Links / accent text */
-a {
-    color: var(--accent-blue);
+.hobby-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(39, 70, 176, 0.7);
 }
 </style>
 """, unsafe_allow_html=True)
 
-# ------------------ LOAD LOGO ------------------
-try:
-    logo = Image.open("Logo.png")
-    st.image(logo, width=220)
-except:
-    st.write("🏷️ Logo not found. Place 'Logo.png' in the folder.")
-
 # ------------------ TITLE ------------------
-st.title("🎨🏀⚽ Find Your Hobby ♟️👩🏻‍🍳🎾")
-st.write("Answer these questions and I'll suggest hobbies just for you!")
+st.markdown("<h1 style='text-align:center'>🎨🏀⚽ Find Your Hobby ♟️👩🏻‍🍳🎾</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align:center; font-size:18px'>Answer these questions and I'll suggest hobbies just for you!</p>", unsafe_allow_html=True)
 st.divider()
 
 # ------------------ QUESTIONS ------------------
@@ -117,17 +141,12 @@ for key, q in questions.items():
         answers[key] = st.selectbox(q, options_dict["YesNo"])
 
 # ------------------ BIG TEXT AREA ------------------
-user_input = st.text_area(
-    "💬 Tell me anything else about what you like:",
-    height=150
-)
+user_input = st.text_area("💬 Tell me anything else about what you like:", height=150)
 st.divider()
 
 # ------------------ HOBBY SUGGESTION FUNCTION ------------------
 def suggest_hobbies(answers, user_text=""):
     hobbies = []
-
-    # Base logic
     if answers["creative"] == "Yes":
         hobbies += ["🎨 Painting", "🧵 Crafts", "✏️ Sketching"]
     if answers["outdoor"] == "Yes":
@@ -136,13 +155,10 @@ def suggest_hobbies(answers, user_text=""):
         hobbies += ["⚽ Team Sports", "🎭 Drama"]
     else:
         hobbies += ["📚 Reading", "✍️ Journaling"]
-
     if answers["time"] == "<2 hours":
         hobbies.append("🧩 Puzzles")
     elif answers["time"] == "5+ hours":
         hobbies.append("🎸 Learning an Instrument")
-
-    # Extra logic
     if answers["physical"] == "Yes":
         hobbies += ["🏋️ Gym", "🚴 Cycling"]
     if answers["budget"] == "Low":
@@ -167,34 +183,22 @@ def suggest_hobbies(answers, user_text=""):
         hobbies += ["🎮 Gaming", "🎬 Movies"]
     if answers["helping"] == "Yes":
         hobbies += ["🤝 Volunteering", "👶 Mentoring"]
-
-    # Smart text input
     if user_text:
         text = user_text.lower()
-        if "art" in text:
-            hobbies.append("🎨 Digital Art")
-        if "game" in text:
-            hobbies.append("🎮 Game Development")
-        if "cook" in text:
-            hobbies.append("👩‍🍳 Cooking")
-        if "sport" in text:
-            hobbies.append("⚽ Sports Practice")
-        if "music" in text:
-            hobbies.append("🎼 Composing Music")
-
-    # Remove duplicates
+        if "art" in text: hobbies.append("🎨 Digital Art")
+        if "game" in text: hobbies.append("🎮 Game Development")
+        if "cook" in text: hobbies.append("👩‍🍳 Cooking")
+        if "sport" in text: hobbies.append("⚽ Sports Practice")
+        if "music" in text: hobbies.append("🎼 Composing Music")
     return list(OrderedDict.fromkeys(hobbies))
 
 # ------------------ DISPLAY HOBBIES ------------------
 if st.button("✨ Suggest Hobbies"):
     hobbies = suggest_hobbies(answers, user_input)
-    
     st.subheader("✨ Recommended Hobbies For You:")
-    
     if not hobbies:
         st.write("Hmm… we couldn't find a match! Try adding more details.")
     else:
-        # Dynamic 3-column grid
         cols = st.columns(3)
         for i, hobby in enumerate(hobbies):
-            cols[i % 3].write(hobby)
+            cols[i % 3].markdown(f"<div class='hobby-card'>{hobby}</div>", unsafe_allow_html=True)
