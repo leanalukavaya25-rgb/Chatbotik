@@ -1,6 +1,7 @@
 import streamlit as st
 from PIL import Image
 from collections import OrderedDict
+import base64
 
 # ------------------ PAGE CONFIG ------------------
 st.set_page_config(
@@ -9,7 +10,27 @@ st.set_page_config(
     layout="centered"
 )
 
-# ------------------ CUSTOM CSS FOR ULTRA DARK OLIVE + DEEP BLUE THEME ------------------
+# ------------------ BACKGROUND IMAGE ------------------
+def set_background(image_file):
+    with open(image_file, "rb") as f:
+        encoded = base64.b64encode(f.read()).decode()
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url("data:image/png;base64,{encoded}");
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+set_background("a_digital_photograph_showcases_a_living_room_bathe.png")
+
+# ------------------ CUSTOM CSS ------------------
 st.markdown("""
 <style>
 :root {
@@ -18,23 +39,17 @@ st.markdown("""
     --accent-blue: #1E3A8A;   
     --text-color: #E5E5E5;    
 }
-/* App background and text */
 body, .stApp {
     background-color: var(--main-bg);
     color: var(--text-color);
 }
-/* Logo spacing */
-.css-1d391kg {
-    margin-bottom: 2rem;
-}
-/* Selectboxes, text area, inputs */
+.css-1d391kg { margin-bottom: 2rem; }
 div.stSelectbox, div.stTextArea, input, textarea {
     background-color: var(--secondary-bg) !important;
     border-radius: 12px;
     padding: 0.5rem;
     color: var(--text-color) !important;
 }
-/* Button styling */
 .stButton>button {
     background-color: var(--main-bg);
     color: var(--text-color);
@@ -48,18 +63,9 @@ div.stSelectbox, div.stTextArea, input, textarea {
     background-color: var(--secondary-bg);
     border: 1px solid var(--text-color);
 }
-/* Divider color */
-hr {
-    border: 1px solid var(--secondary-bg);
-}
-/* Subheaders and titles */
-h1, h2, h3, h4 {
-    color: var(--text-color);
-}
-/* Links / accent text */
-a {
-    color: var(--accent-blue);
-}
+hr { border: 1px solid var(--secondary-bg); }
+h1, h2, h3, h4 { color: var(--text-color); }
+a { color: var(--accent-blue); }
 </style>
 """, unsafe_allow_html=True)
 
@@ -144,9 +150,8 @@ def suggest_hobbies(answers, user_text="", age=25, fitness="Medium"):
     elif answers["time"] == "5+ hours":
         hobbies.append("🎸 Learning an Instrument")
 
-    # Extra logic
+    # Physical activities - age and fitness aware
     if answers["physical"] == "Yes":
-        # Skip intense physical activities if age > 45 or fitness is low
         if age <= 45 and fitness in ["Medium", "High"]:
             hobbies += ["🏋️ Gym", "🚴 Cycling", "🥊 Martial Arts"]
         else:
@@ -202,7 +207,6 @@ if st.button("✨ Suggest Hobbies"):
     if not hobbies:
         st.write("Hmm… we couldn't find a match! Try adding more details.")
     else:
-        # Dynamic 3-column grid
         cols = st.columns(3)
         for i, hobby in enumerate(hobbies):
             cols[i % 3].write(hobby)
