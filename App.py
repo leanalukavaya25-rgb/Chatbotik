@@ -9,13 +9,13 @@ st.set_page_config(
     layout="centered"
 )
 
-# ------------------ CUSTOM CSS FOR DEEP OLIVE GREEN THEME ------------------
+# ------------------ CUSTOM CSS FOR DARK OLIVE-BLUE THEME ------------------
 st.markdown("""
 <style>
 /* Main background and text */
 body, .stApp {
-    background-color: #3B4B0F;  /* deep dark olive green background */
-    color: #F5F5DC;              /* light beige text for contrast */
+    background-color: #2F3B0F;  /* very dark olive with subtle blue undertone */
+    color: #F5F5DC;              /* beige/light text */
 }
 
 /* Logo spacing */
@@ -25,21 +25,21 @@ body, .stApp {
 
 /* Selectboxes and text area styling */
 div.stSelectbox, div.stTextArea {
-    background-color: #556B2F !important;  /* slightly lighter dark olive boxes */
+    background-color: #3B4B0F !important;  /* slightly lighter for contrast */
     border-radius: 12px;
     padding: 0.5rem;
-    color: #F5F5DC !important;             /* text inside boxes */
+    color: #F5F5DC !important;
 }
 
 /* Text area input text */
 textarea {
-    background-color: #556B2F !important;
+    background-color: #3B4B0F !important;
     color: #F5F5DC !important;
 }
 
 /* Button styling */
 .stButton>button {
-    background-color: #3B4B0F;  /* match darkest olive for button */
+    background-color: #2F3B0F;
     color: #F5F5DC;
     font-weight: bold;
     border-radius: 12px;
@@ -48,12 +48,12 @@ textarea {
 
 /* Button hover effect */
 .stButton>button:hover {
-    background-color: #556B2F;  /* lighter olive on hover */
+    background-color: #3B4B0F;
 }
 
 /* Divider color */
 hr {
-    border: 1px solid #556B2F;
+    border: 1px solid #3B4B0F;
 }
 
 /* Subheaders */
