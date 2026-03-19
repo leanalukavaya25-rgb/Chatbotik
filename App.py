@@ -1,53 +1,53 @@
 import streamlit as st
 from PIL import Image
 
-# Page settings (UPDATED ICON)
+# ------------------ PAGE CONFIG (FAVICON) ------------------
 st.set_page_config(
     page_title="Find Your Hobby",
-    page_icon="༺♰༻",
+    page_icon="Logo.png",  # ✅ This is the favicon
     layout="centered"
 )
 
-# Load Logo
+# ------------------ LOAD & DISPLAY LOGO ------------------
 logo = Image.open("Logo.png")
 
-# Display Logo
-st.image(logo, width=250)
+st.image(logo, width=220)
 
-# Title and description
+# ------------------ TITLE ------------------
 st.title("🎨🏀⚽ Find Your Hobby ♟️👩🏻‍🍳🎾")
 st.write("Answer a few questions and I'll suggest hobbies for you!")
 
 st.divider()
 
-# Questions
+# ------------------ QUESTIONS ------------------
 creative = st.selectbox(
-    "Do you prefer creative hobbies?",
+    "🎨 Do you prefer creative hobbies?",
     ["Yes", "No"]
 )
 
 outdoor = st.selectbox(
-    "Do you enjoy being outdoors?",
+    "🌳 Do you enjoy being outdoors?",
     ["Yes", "No"]
 )
 
 social = st.selectbox(
-    "Do you like working with other people?",
+    "👥 Do you like working with other people?",
     ["Yes", "No"]
 )
 
 time = st.selectbox(
-    "How much free time do you have each week?",
+    "⏳ How much free time do you have each week?",
     ["Less than 2 hours", "2-5 hours", "5+ hours"]
 )
 
 st.divider()
 
-# Suggestion button
+# ------------------ BUTTON ------------------
 if st.button("✨ Suggest Hobbies"):
-    
+
     hobbies = []
 
+    # Logic
     if creative == "Yes":
         hobbies.append("🎨 Drawing or Painting")
         hobbies.append("🧵 DIY Crafts")
@@ -59,21 +59,23 @@ if st.button("✨ Suggest Hobbies"):
     if social == "Yes":
         hobbies.append("⚽ Team Sports")
         hobbies.append("🎭 Drama Club")
-
-    if social == "No":
+    else:
         hobbies.append("📚 Reading")
         hobbies.append("✍️ Journaling")
 
     if time == "Less than 2 hours":
         hobbies.append("🧩 Puzzles")
-
     elif time == "5+ hours":
         hobbies.append("🎸 Learning an Instrument")
 
+    # Fallback
     if not hobbies:
         hobbies.append("🎲 Board Games")
 
+    # ------------------ OUTPUT ------------------
     st.subheader("✨ Recommended Hobbies For You:")
 
     for hobby in hobbies:
         st.write(hobby)
+
+    st.success("🎉 Hope you found something fun to try!")
