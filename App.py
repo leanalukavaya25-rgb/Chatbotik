@@ -9,13 +9,13 @@ st.set_page_config(
     layout="centered"
 )
 
-# ------------------ CUSTOM CSS FOR DARK BLUE THEME ------------------
+# ------------------ CUSTOM CSS FOR OLIVE GREEN THEME ------------------
 st.markdown("""
 <style>
 /* Main background and text */
 body, .stApp {
-    background-color: #001f4d;  /* dark blue background */
-    color: #cce0ff;              /* light blue text */
+    background-color: #808000;  /* olive green background */
+    color: #f5f5dc;              /* beige/light text for contrast */
 }
 
 /* Logo spacing */
@@ -25,22 +25,22 @@ body, .stApp {
 
 /* Selectboxes and text area styling */
 div.stSelectbox, div.stTextArea {
-    background-color: #003366 !important;  /* dark blue boxes */
+    background-color: #9acd32 !important;  /* lighter olive box */
     border-radius: 12px;
     padding: 0.5rem;
-    color: #cce0ff !important;             /* text color */
+    color: #f5f5dc !important;             /* text inside boxes */
 }
 
 /* Text area input text */
 textarea {
-    background-color: #003366 !important;
-    color: #cce0ff !important;
+    background-color: #9acd32 !important;
+    color: #f5f5dc !important;
 }
 
 /* Button styling */
 .stButton>button {
-    background-color: #0052cc;  /* vibrant blue */
-    color: #ffffff;
+    background-color: #556b2f;  /* dark olive button */
+    color: #f5f5dc;
     font-weight: bold;
     border-radius: 12px;
     padding: 0.5rem 1rem;
@@ -48,17 +48,17 @@ textarea {
 
 /* Button hover effect */
 .stButton>button:hover {
-    background-color: #003d99;
+    background-color: #6b8e23;  /* lighter olive on hover */
 }
 
 /* Divider color */
 hr {
-    border: 1px solid #3399ff;
+    border: 1px solid #6b8e23;
 }
 
 /* Subheaders */
 h2, h3, h4 {
-    color: #cce0ff;
+    color: #f5f5dc;
 }
 </style>
 """, unsafe_allow_html=True)
