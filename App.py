@@ -1,5 +1,6 @@
 import streamlit as st
 from PIL import Image
+from collections import OrderedDict
 
 # ------------------ PAGE CONFIG ------------------
 st.set_page_config(
@@ -8,7 +9,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# ------------------ CUSTOM DARK BLUE CSS ------------------
+# ------------------ CUSTOM CSS FOR DARK BLUE THEME ------------------
 st.markdown("""
 <style>
 /* Main background and text */
@@ -17,31 +18,37 @@ body, .stApp {
     color: #cce0ff;              /* light blue text */
 }
 
-/* Logo and title spacing */
+/* Logo spacing */
 .css-1d391kg {
     margin-bottom: 2rem;
 }
 
-/* Selectboxes and text input */
-div.stSelectbox, div.stTextInput, div.stButton {
-    background-color: #003366 !important;  /* darker blue box */
-    border-radius: 10px;
-    padding: 0.3rem;
-    color: #cce0ff !important; /* text inside boxes */
+/* Selectboxes and text area styling */
+div.stSelectbox, div.stTextArea {
+    background-color: #003366 !important;  /* dark blue boxes */
+    border-radius: 12px;
+    padding: 0.5rem;
+    color: #cce0ff !important;             /* text color */
 }
 
-/* Button */
+/* Text area input text */
+textarea {
+    background-color: #003366 !important;
+    color: #cce0ff !important;
+}
+
+/* Button styling */
 .stButton>button {
-    background-color: #0052cc;  /* vibrant dark blue */
+    background-color: #0052cc;  /* vibrant blue */
     color: #ffffff;
     font-weight: bold;
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 0.5rem 1rem;
 }
 
-/* Hover effect on button */
+/* Button hover effect */
 .stButton>button:hover {
-    background-color: #003d99;  /* darker hover */
+    background-color: #003d99;
 }
 
 /* Divider color */
@@ -49,7 +56,7 @@ hr {
     border: 1px solid #3399ff;
 }
 
-/* Subheader */
+/* Subheaders */
 h2, h3, h4 {
     color: #cce0ff;
 }
@@ -83,12 +90,16 @@ nature = st.selectbox("🌿 Do you like nature?", ["Yes", "No"])
 indoor = st.selectbox("🏠 Prefer indoor activities?", ["Yes", "No"])
 helping = st.selectbox("🤝 Do you enjoy helping others?", ["Yes", "No"])
 
-user_input = st.text_input("💬 Tell me anything else about what you like:")
+# ------------------ BIG TEXT AREA FOR EXTRA INPUT ------------------
+user_input = st.text_area(
+    "💬 Tell me anything else about what you like:",
+    height=150  # bigger input box
+)
+
 st.divider()
 
-# ------------------ BUTTON LOGIC ------------------
+# ------------------ HOBBY SUGGESTION LOGIC ------------------
 if st.button("✨ Suggest Hobbies"):
-
     hobbies = []
 
     # Base logic
@@ -144,7 +155,7 @@ if st.button("✨ Suggest Hobbies"):
     if helping == "Yes":
         hobbies += ["🤝 Volunteering", "👶 Mentoring"]
 
-    # Smart text input
+    # Smart text input logic
     if user_input:
         text = user_input.lower()
         if "art" in text:
@@ -158,8 +169,7 @@ if st.button("✨ Suggest Hobbies"):
         if "music" in text:
             hobbies.append("🎼 Composing Music")
 
-    # Remove duplicates and preserve order
-    from collections import OrderedDict
+    # Remove duplicates while keeping order
     hobbies = list(OrderedDict.fromkeys(hobbies))
 
     # ------------------ OUTPUT ------------------
