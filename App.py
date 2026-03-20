@@ -1,59 +1,74 @@
 import streamlit as st
 from PIL import Image
 from collections import OrderedDict
-import base64
 import time
 import random
 
 # ------------------ PAGE CONFIG ------------------
 st.set_page_config(
-    page_title="AI Hobby Finder",
+    page_title="Find Your Hobby",
     page_icon="favicon.png",
     layout="centered"
 )
 
-# ------------------ BACKGROUND ------------------
-def set_bg(image):
-    with open(image, "rb") as f:
-        data = base64.b64encode(f.read()).decode()
-    st.markdown(f"""
-    <style>
-    .stApp {{
-        background-image: url("data:image/png;base64,{data}");
-        background-size: cover;
-        background-attachment: fixed;
-    }}
-    </style>
-    """, unsafe_allow_html=True)
-
-set_bg("a_digital_photograph_showcases_a_living_room_bathe.png")
-
-# ------------------ MODERN UI ------------------
+# ------------------ COLORS ------------------
 st.markdown("""
 <style>
+:root {
+    --main-bg: #0B1208;
+    --secondary-bg: #16220F;
+    --accent-blue: #1E3A8A;
+    --text-color: #E5E5E5;
+}
+
+/* App background */
+body, .stApp {
+    background-color: var(--main-bg);
+}
+
+/* Container */
 .block-container {
-    background: rgba(11,18,8,0.65);
-    backdrop-filter: blur(12px);
-    border-radius: 20px;
+    background: rgba(11,18,8,0.9);
     padding: 2rem;
+    border-radius: 18px;
 }
+
+/* Text */
 h1, h2, h3, h4, p, label {
-    color: #E5E5E5 !important;
+    color: var(--text-color) !important;
 }
+
+/* Inputs */
+.stSelectbox div, textarea {
+    background-color: var(--secondary-bg) !important;
+    color: var(--text-color) !important;
+    border-radius: 12px;
+}
+
+/* Button */
 .stButton>button {
-    background: linear-gradient(135deg, #1E3A8A, #0B1208);
-    color: white;
-    border-radius: 14px;
+    background-color: var(--main-bg);
+    color: var(--text-color);
+    border: 1px solid var(--accent-blue);
+    border-radius: 12px;
+    transition: 0.2s;
 }
+.stButton>button:hover {
+    background-color: var(--secondary-bg);
+}
+
+/* Chat bubbles */
 .chat-user {
-    background: #1E3A8A;
+    background-color: var(--accent-blue);
+    color: white;
     padding: 10px;
     border-radius: 12px;
     margin: 5px 0;
     text-align: right;
 }
 .chat-bot {
-    background: rgba(255,255,255,0.1);
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
     padding: 10px;
     border-radius: 12px;
     margin: 5px 0;
@@ -61,7 +76,7 @@ h1, h2, h3, h4, p, label {
 </style>
 """, unsafe_allow_html=True)
 
-# ------------------ MEMORY ------------------
+# ------------------ SESSION ------------------
 if "chat" not in st.session_state:
     st.session_state.chat = []
 
@@ -69,10 +84,10 @@ if "chat" not in st.session_state:
 try:
     st.image(Image.open("Logo.png"), width=180)
 except:
-    pass
+    st.write("")
 
 # ------------------ TITLE ------------------
-st.title("🤖 AI Hobby Finder")
+st.title("🎨 Find Your Hobby")
 
 # ------------------ INPUT ------------------
 st.subheader("🧍 Tell me about yourself")
@@ -86,36 +101,24 @@ tech = st.selectbox("Tech interest?", ["Yes", "No"])
 music = st.selectbox("Music?", ["Yes", "No"])
 extra = st.text_area("Anything else?")
 
-# ------------------ SMART FAKE AI ------------------
+# ------------------ AI LOGIC ------------------
 def smart_ai():
     hobbies = []
-    explanations = []
 
     if creative == "Yes":
-        hobbies += ["🎨 Painting", "✏️ Drawing", "🧵 Crafts"]
-        explanations.append("You seem creative, so artistic hobbies fit you well.")
-
+        hobbies += ["🎨 Painting", "✏️ Drawing"]
     if outdoor == "Yes":
         hobbies += ["🌿 Hiking", "🌱 Gardening"]
-        explanations.append("You enjoy nature, so outdoor hobbies are great.")
-
     if physical == "Yes":
         if age <= 45 and fitness != "Low":
             hobbies += ["🏋️ Gym", "🚴 Cycling"]
-            explanations.append("You can handle active hobbies.")
         else:
             hobbies += ["🚶 Walking", "🧘 Yoga"]
-            explanations.append("Lighter activities suit your lifestyle better.")
-
     if tech == "Yes":
-        hobbies += ["💻 Coding", "🎮 Game Development"]
-        explanations.append("You like tech, so digital hobbies are perfect.")
-
+        hobbies += ["💻 Coding"]
     if music == "Yes":
-        hobbies += ["🎧 Music Production", "🎸 Guitar"]
-        explanations.append("Music-based hobbies match your interests.")
+        hobbies += ["🎧 Music Production"]
 
-    # Extra input intelligence
     if extra:
         text = extra.lower()
         if "cook" in text:
@@ -125,31 +128,36 @@ def smart_ai():
 
     hobbies = list(OrderedDict.fromkeys(hobbies))
 
-    # Build AI-style response
     intro = random.choice([
-        "Based on your answers, here are some great hobbies for you:",
-        "I analyzed your preferences — here are my suggestions:",
-        "Here are hobbies that match your personality:"
+        "Based on your answers, here are great hobbies:",
+        "Here are hobbies that match you:",
+        "I recommend these hobbies for you:"
     ])
 
     response = intro + "\n\n"
-
     for h in hobbies:
         response += f"{h}\n"
 
-    if explanations:
-        response += "\n💡 Why these fit you:\n"
-        for e in explanations:
-            response += f"- {e}\n"
-
     return response
+
+# ------------------ TYPING EFFECT ------------------
+def type_text(text):
+    placeholder = st.empty()
+    typed = ""
+    for char in text:
+        typed += char
+        placeholder.markdown(
+            f'<div class="chat-bot">{typed}</div>',
+            unsafe_allow_html=True
+        )
+        time.sleep(0.008)
 
 # ------------------ BUTTON ------------------
 if st.button("✨ Ask AI"):
     st.session_state.chat.append(("user", "Suggest hobbies for me"))
 
     with st.spinner("🤖 AI is thinking..."):
-        time.sleep(1.5)
+        time.sleep(1)
         reply = smart_ai()
 
     st.session_state.chat.append(("bot", reply))
@@ -157,8 +165,11 @@ if st.button("✨ Ask AI"):
 # ------------------ CHAT ------------------
 st.subheader("💬 Chat")
 
-for role, msg in st.session_state.chat:
+for i, (role, msg) in enumerate(st.session_state.chat):
     if role == "user":
         st.markdown(f'<div class="chat-user">{msg}</div>', unsafe_allow_html=True)
     else:
-        st.markdown(f'<div class="chat-bot">{msg}</div>', unsafe_allow_html=True)
+        if i == len(st.session_state.chat) - 1:
+            type_text(msg)
+        else:
+            st.markdown(f'<div class="chat-bot">{msg}</div>', unsafe_allow_html=True)
