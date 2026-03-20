@@ -20,55 +20,38 @@ st.markdown("""
     --accent-blue: #1E3A8A;
     --text-color: #E5E5E5;
 }
-
-/* App background */
 body, .stApp {
     background-color: var(--main-bg);
 }
-
-/* Container */
 .block-container {
     background: rgba(11,18,8,0.9);
     padding: 2rem;
     border-radius: 18px;
 }
-
-/* Text */
 h1, h2, h3, h4, p, label {
     color: var(--text-color) !important;
 }
-
-/* Inputs */
 .stSelectbox div, textarea {
     background-color: var(--secondary-bg) !important;
     color: var(--text-color) !important;
     border-radius: 12px;
 }
-
-/* Button */
 .stButton>button {
     background-color: var(--main-bg);
     color: var(--text-color);
     border: 1px solid var(--accent-blue);
     border-radius: 12px;
-    transition: 0.2s;
 }
-.stButton>button:hover {
-    background-color: var(--secondary-bg);
-}
-
-/* Chat bubbles */
 .chat-user {
     background-color: var(--accent-blue);
     color: white;
     padding: 10px;
     border-radius: 12px;
-    margin: 5px 0;
     text-align: right;
+    margin: 5px 0;
 }
 .chat-bot {
     background-color: var(--secondary-bg);
-    color: var(--text-color);
     padding: 10px;
     border-radius: 12px;
     margin: 5px 0;
@@ -84,7 +67,7 @@ if "chat" not in st.session_state:
 try:
     st.image(Image.open("Logo.png"), width=180)
 except:
-    st.write("")
+    pass
 
 # ------------------ TITLE ------------------
 st.title("🎨 Find Your Hobby")
@@ -101,42 +84,74 @@ tech = st.selectbox("Tech interest?", ["Yes", "No"])
 music = st.selectbox("Music?", ["Yes", "No"])
 extra = st.text_area("Anything else?")
 
-# ------------------ AI LOGIC ------------------
-def smart_ai():
-    hobbies = []
+# ------------------ SCORING SYSTEM ------------------
+def get_hobbies_with_scores():
+    scores = {}
+
+    def add_score(hobby, value):
+        scores[hobby] = scores.get(hobby, 0) + value
 
     if creative == "Yes":
-        hobbies += ["🎨 Painting", "✏️ Drawing"]
+        add_score("🎨 Painting", 3)
+        add_score("✏️ Drawing", 3)
+
     if outdoor == "Yes":
-        hobbies += ["🌿 Hiking", "🌱 Gardening"]
+        add_score("🌿 Hiking", 3)
+        add_score("🌱 Gardening", 2)
+
     if physical == "Yes":
         if age <= 45 and fitness != "Low":
-            hobbies += ["🏋️ Gym", "🚴 Cycling"]
+            add_score("🏋️ Gym", 4)
+            add_score("🚴 Cycling", 3)
         else:
-            hobbies += ["🚶 Walking", "🧘 Yoga"]
+            add_score("🚶 Walking", 4)
+            add_score("🧘 Yoga", 3)
+
     if tech == "Yes":
-        hobbies += ["💻 Coding"]
+        add_score("💻 Coding", 3)
+
     if music == "Yes":
-        hobbies += ["🎧 Music Production"]
+        add_score("🎧 Music Production", 3)
 
     if extra:
         text = extra.lower()
         if "cook" in text:
-            hobbies.append("👩‍🍳 Cooking")
+            add_score("👩‍🍳 Cooking", 3)
         if "art" in text:
-            hobbies.append("🎨 Digital Art")
+            add_score("🎨 Digital Art", 3)
 
-    hobbies = list(OrderedDict.fromkeys(hobbies))
+    return scores
+
+# ------------------ BUILD RESPONSE ------------------
+def smart_ai():
+    scores = get_hobbies_with_scores()
+
+    # Sort hobbies by score
+    ranked = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+
+    top3 = ranked[:3]
+    all_hobbies = [h[0] for h in ranked]
 
     intro = random.choice([
-        "Based on your answers, here are great hobbies:",
-        "Here are hobbies that match you:",
-        "I recommend these hobbies for you:"
+        "Here are your best hobby matches:",
+        "Based on your profile, these are perfect for you:",
+        "Top hobbies for you:"
     ])
 
     response = intro + "\n\n"
-    for h in hobbies:
-        response += f"{h}\n"
+
+    # Top 3 section
+    if top3:
+        response += "🏆 TOP 3 FOR YOU:\n"
+        medals = ["🥇", "🥈", "🥉"]
+        for i, (hobby, score) in enumerate(top3):
+            response += f"{medals[i]} {hobby} (score: {score})\n"
+
+    # Other hobbies
+    if len(all_hobbies) > 3:
+        response += "\n✨ Other suggestions:\n"
+        for hobby in all_hobbies[3:]:
+            response += f"{hobby}\n"
 
     return response
 
