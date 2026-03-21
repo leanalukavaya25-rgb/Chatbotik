@@ -1,2 +1,5 @@
 Streamlit
 OpenAI
+matplotlib
+numpy
+pillow
