@@ -28,16 +28,15 @@ body, .stApp {
 
 div.stSelectbox, div.stTextArea, input, textarea {
     background-color: var(--secondary-bg) !important;
-    border-radius: 12px;
-    padding: 0.4rem;
+    border-radius: 10px;
     color: var(--text-color) !important;
 }
 
 .stButton>button {
     background-color: var(--main-bg);
     color: var(--text-color);
-    border-radius: 12px;
     border: 1px solid var(--accent-blue);
+    border-radius: 10px;
     font-weight: bold;
 }
 
@@ -56,7 +55,7 @@ try:
     logo = Image.open("Logo.png")
     st.image(logo, width=200)
 except:
-    st.warning("Logo not found.")
+    st.write("")
 
 # ------------------ TITLE ------------------
 st.title("🎨 Find Your Perfect Hobby")
@@ -68,28 +67,28 @@ st.subheader("🧍 Personal Info")
 
 age = st.slider("Age", 5, 100, 25)
 fitness = st.selectbox("Fitness Level", ["Low", "Medium", "High"])
-stress = st.selectbox("Stress Level", ["Low", "Medium", "High"])
 
 # ------------------ QUESTIONS ------------------
 st.subheader("🧠 Preferences")
 
 questions = {
-    "creative": "Creative",
-    "outdoor": "Outdoor",
-    "social": "Social",
-    "physical": "Physical",
-    "learning": "Learning",
-    "technology": "Technology",
-    "music": "Music",
-    "patience": "Patience",
-    "competition": "Competition"
+    "Creative": "Do you enjoy creative activities?",
+    "Outdoor": "Do you like being outdoors?",
+    "Social": "Do you enjoy social activities?",
+    "Physical": "Do you like physical activity?",
+    "Learning": "Do you enjoy learning new things?",
+    "Technology": "Are you interested in technology?",
+    "Music": "Do you enjoy music?",
+    "Patience": "Are you patient?",
+    "Competition": "Do you like competition?"
 }
 
 answers = {}
-for key, label in questions.items():
-    answers[key] = st.selectbox(label, ["No", "Yes"])
 
-user_text = st.text_area("💬 Extra preferences")
+for key, question in questions.items():
+    answers[key] = st.selectbox(question, ["No", "Yes"])
+
+user_text = st.text_area("💬 Extra preferences (optional)")
 
 # ------------------ RADAR CHART ------------------
 def create_radar_chart(answers):
@@ -97,81 +96,85 @@ def create_radar_chart(answers):
     values = [1 if v == "Yes" else 0 for v in answers.values()]
 
     # close the loop
-    values += values[:1]
+    values.append(values[0])
     angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
-    angles += angles[:1]
+    angles.append(angles[0])
 
-    fig, ax = plt.subplots(figsize=(5, 5), subplot_kw=dict(polar=True))
+    fig = plt.figure(figsize=(5, 5))
+    ax = fig.add_subplot(111, polar=True)
 
     ax.plot(angles, values)
-    ax.fill(angles, values, alpha=0.2)
+    ax.fill(angles, values, alpha=0.25)
 
     ax.set_xticks(angles[:-1])
-    ax.set_xticklabels(labels, color="#E5E5E5")
+    ax.set_xticklabels(labels)
 
     ax.set_yticks([0, 1])
-    ax.set_yticklabels(["No", "Yes"], color="#E5E5E5")
+    ax.set_yticklabels(["No", "Yes"])
 
-    ax.set_facecolor("#16220F")
+    # DARK THEME FIX
     fig.patch.set_facecolor("#0B1208")
+    ax.set_facecolor("#16220F")
+    ax.tick_params(colors="white")
 
     return fig
 
-# ------------------ HOBBY ENGINE ------------------
+# ------------------ HOBBY LOGIC ------------------
 def suggest_hobbies(answers, text, age, fitness):
     hobbies = []
 
-    if answers["creative"] == "Yes":
+    if answers["Creative"] == "Yes":
         hobbies += ["🎨 Painting", "✏️ Sketching"]
 
-    if answers["outdoor"] == "Yes":
+    if answers["Outdoor"] == "Yes":
         hobbies += ["🥾 Hiking", "🌱 Gardening"]
 
-    if answers["social"] == "Yes":
+    if answers["Social"] == "Yes":
         hobbies += ["⚽ Team Sports", "🎭 Acting"]
     else:
         hobbies += ["📚 Reading", "✍️ Journaling"]
 
-    if answers["physical"] == "Yes":
+    if answers["Physical"] == "Yes":
         if age < 45 and fitness != "Low":
             hobbies += ["🏋️ Gym", "🚴 Cycling"]
         else:
             hobbies += ["🚶 Walking", "🧘 Yoga"]
 
-    if answers["learning"] == "Yes":
-        hobbies += ["🌍 Languages", "🧠 Courses"]
+    if answers["Learning"] == "Yes":
+        hobbies += ["🌍 Learning Languages", "🧠 Online Courses"]
 
-    if answers["technology"] == "Yes":
+    if answers["Technology"] == "Yes":
         hobbies += ["💻 Coding", "🤖 Robotics"]
 
-    if answers["music"] == "Yes":
+    if answers["Music"] == "Yes":
         hobbies += ["🎸 Guitar", "🎤 Singing"]
 
-    if answers["patience"] == "Yes":
+    if answers["Patience"] == "Yes":
         hobbies += ["♟️ Chess", "🧩 Puzzles"]
 
-    if answers["competition"] == "Yes":
+    if answers["Competition"] == "Yes":
         hobbies += ["🏆 eSports"]
 
-    # Text intelligence
+    # TEXT MATCHING
     text = text.lower()
+
     if "cook" in text:
         hobbies.append("👩‍🍳 Cooking")
     if "art" in text:
         hobbies.append("🎨 Digital Art")
     if "game" in text:
-        hobbies.append("🎮 Game Dev")
+        hobbies.append("🎮 Game Development")
 
     return list(OrderedDict.fromkeys(hobbies))
 
 # ------------------ BUTTON ------------------
 if st.button("✨ Find My Hobby"):
 
-    hobbies = suggest_hobbies(answers, user_text, age, fitness)
-
     st.subheader("📊 Your Personality Map")
     fig = create_radar_chart(answers)
     st.pyplot(fig)
+
+    hobbies = suggest_hobbies(answers, user_text, age, fitness)
 
     st.subheader("✨ Recommended Hobbies")
 
@@ -180,4 +183,4 @@ if st.button("✨ Find My Hobby"):
         for i, hobby in enumerate(hobbies):
             cols[i % 3].write(hobby)
     else:
-        st.write("No hobbies found — try adding more preferences!")
+        st.write("Try selecting more preferences!")
