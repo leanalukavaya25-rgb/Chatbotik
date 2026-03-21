@@ -31,10 +31,9 @@ body, .stApp {
     color: var(--text-color);
 }
 
-div.stSelectbox, div.stTextArea, input, textarea {
+div.stSlider, div.stTextArea, input, textarea {
     background-color: var(--secondary-bg) !important;
     border-radius: 12px;
-    padding: 0.4rem;
     color: var(--text-color) !important;
 }
 
@@ -44,10 +43,6 @@ div.stSelectbox, div.stTextArea, input, textarea {
     border: 1px solid var(--accent-blue);
     border-radius: 12px;
     font-weight: bold;
-}
-
-.stButton>button:hover {
-    background-color: var(--secondary-bg);
 }
 
 h1, h2, h3 {
@@ -61,79 +56,54 @@ try:
     logo = Image.open("Logo.png")
     st.image(logo, width=220)
 except:
-    st.write("")
+    pass
 
 # ------------------ TITLE ------------------
 st.title("🎨🏀⚽ Find Your Hobby ♟️👩🏻‍🍳🎾")
-st.write("Answer these questions and I'll suggest hobbies just for you!")
+st.write("Rate each statement from 1 (Hate) to 5 (Love)")
 st.divider()
 
 # ------------------ PERSONAL INFO ------------------
 st.subheader("🧍 Personal Info")
 
-age = st.number_input("🗓️ Age", min_value=5, max_value=100, value=25)
+age = st.number_input("🗓️ Age", 5, 100, 25)
 fitness = st.selectbox("💪 Fitness Level", ["Low", "Medium", "High"])
-stress_level = st.selectbox("😌 Stress Level", ["Low", "Medium", "High"])
-work_hours = st.selectbox("⌛ Weekly Work Hours", ["<20", "20-40", "40+"])
-sleep_hours = st.selectbox("🛌 Average Sleep Hours", ["<5", "5-7", "7+"])
 
 # ------------------ QUESTIONS ------------------
-st.subheader("🧠 Preferences")
+st.subheader("🧠 Preferences (1 = Hate, 5 = Love)")
 
 questions = {
-    "creative": "🎨 Do you prefer creative hobbies?",
-    "outdoor": "🌳 Do you enjoy being outdoors?",
-    "social": "👥 Do you like working with other people?",
-    "time": "⏳ Free time per week?",
-    "physical": "💪 Do you enjoy physical activity?",
-    "budget": "💰 Budget level?",
-    "learning": "📚 Do you enjoy learning new things?",
-    "technology": "💻 Interested in technology?",
-    "music": "🎵 Do you like music?",
-    "patience": "🧘 Are you patient?",
-    "competition": "🏆 Do you like competition?",
-    "travel": "✈️ Do you like traveling/exploring?",
-    "nature": "🌿 Do you like nature?",
-    "indoor": "🏠 Prefer indoor activities?",
-    "helping": "🤝 Do you enjoy helping others?"
-}
-
-options_dict = {
-    "YesNo": ["Yes", "No"],
-    "Time": ["<2 hours", "2–5 hours", "5+ hours"],
-    "Budget": ["Low", "Medium", "High"]
+    "creative": "🎨 Creative activities",
+    "outdoor": "🌳 Being outdoors",
+    "social": "👥 Social interaction",
+    "physical": "💪 Physical activity",
+    "learning": "📚 Learning new things",
+    "technology": "💻 Technology",
+    "music": "🎵 Music",
+    "patience": "🧘 Patience activities",
+    "competition": "🏆 Competition",
+    "travel": "✈️ Travel & exploring",
+    "nature": "🌿 Nature",
+    "indoor": "🏠 Indoor activities",
+    "helping": "🤝 Helping others"
 }
 
 answers = {}
 
-for key, q in questions.items():
-    if key == "time":
-        answers[key] = st.selectbox(q, options_dict["Time"])
-    elif key == "budget":
-        answers[key] = st.selectbox(q, options_dict["Budget"])
-    else:
-        answers[key] = st.selectbox(q, options_dict["YesNo"])
+for key, label in questions.items():
+    answers[key] = st.slider(label, 1, 5, 3)
 
 # ------------------ TEXT INPUT ------------------
-user_input = st.text_area("💬 Tell me anything else about what you like:")
+user_input = st.text_area("💬 Tell me anything else you like:")
 st.divider()
 
 # ------------------ RADAR CHART ------------------
 def create_radar_chart(ans):
     labels = list(ans.keys())
+    values = list(ans.values())
 
-    values = []
-    for v in ans.values():
-        if v == "Yes":
-            values.append(1)
-        elif v == "No":
-            values.append(0)
-        elif v in ["Low", "<2 hours"]:
-            values.append(0)
-        elif v in ["Medium", "2–5 hours"]:
-            values.append(0.5)
-        else:
-            values.append(1)
+    # normalize (1–5 → 0–1)
+    values = [v / 5 for v in values]
 
     values.append(values[0])
     angles = np.linspace(0, 2*np.pi, len(labels), endpoint=False).tolist()
@@ -150,8 +120,8 @@ def create_radar_chart(ans):
     ax.set_xticks(angles[:-1])
     ax.set_xticklabels(labels, color="white", fontsize=8)
 
-    ax.set_yticks([0, 0.5, 1])
-    ax.set_yticklabels(["Low", "Medium", "High"], color="white")
+    ax.set_yticks([0.2, 0.5, 0.8, 1])
+    ax.set_yticklabels(["1", "2-3", "4", "5"], color="white")
 
     return fig
 
@@ -159,53 +129,48 @@ def create_radar_chart(ans):
 def suggest_hobbies(ans, text, age, fitness):
     hobbies = []
 
-    if ans["creative"] == "Yes":
-        hobbies += ["🎨 Painting", "🧵 Crafts", "✏️ Sketching"]
+    if ans["creative"] >= 4:
+        hobbies += ["🎨 Painting", "✏️ Sketching", "🧵 Crafts"]
 
-    if ans["outdoor"] == "Yes":
+    if ans["outdoor"] >= 4:
         hobbies += ["🥾 Hiking", "🌱 Gardening"]
 
-    if ans["social"] == "Yes":
+    if ans["social"] >= 4:
         hobbies += ["⚽ Team Sports", "🎭 Drama"]
-    else:
+    elif ans["social"] <= 2:
         hobbies += ["📚 Reading", "✍️ Journaling"]
 
-    if ans["physical"] == "Yes":
-        if age <= 45 and fitness in ["Medium", "High"]:
+    if ans["physical"] >= 4:
+        if age <= 45 and fitness != "Low":
             hobbies += ["🏋️ Gym", "🚴 Cycling"]
         else:
             hobbies += ["🚶 Walking", "🧘 Yoga"]
 
-    if ans["budget"] == "Low":
-        hobbies += ["📖 Reading", "✍️ Writing"]
-    elif ans["budget"] == "High":
-        hobbies += ["📷 Photography", "🎮 Gaming Setup"]
+    if ans["learning"] >= 4:
+        hobbies += ["🌍 Learning Languages", "🧠 Online Courses"]
 
-    if ans["learning"] == "Yes":
-        hobbies += ["🌍 Languages", "🧠 Courses"]
-
-    if ans["technology"] == "Yes":
+    if ans["technology"] >= 4:
         hobbies += ["💻 Coding", "🤖 Robotics"]
 
-    if ans["music"] == "Yes":
+    if ans["music"] >= 4:
         hobbies += ["🎤 Singing", "🎧 Music Production"]
 
-    if ans["patience"] == "Yes":
-        hobbies += ["♟️ Chess", "🧩 Model Building"]
+    if ans["patience"] >= 4:
+        hobbies += ["♟️ Chess", "🧩 Puzzles"]
 
-    if ans["competition"] == "Yes" and age <= 45:
+    if ans["competition"] >= 4:
         hobbies += ["🏆 eSports"]
 
-    if ans["travel"] == "Yes":
+    if ans["travel"] >= 4:
         hobbies += ["🗺️ Exploring"]
 
-    if ans["nature"] == "Yes":
+    if ans["nature"] >= 4:
         hobbies += ["🌿 Nature Walks"]
 
-    if ans["indoor"] == "Yes":
+    if ans["indoor"] >= 4:
         hobbies += ["🎮 Gaming"]
 
-    if ans["helping"] == "Yes":
+    if ans["helping"] >= 4:
         hobbies += ["🤝 Volunteering"]
 
     # TEXT MATCH
@@ -222,7 +187,7 @@ def suggest_hobbies(ans, text, age, fitness):
 # ------------------ BUTTON ------------------
 if st.button("✨ Suggest Hobbies"):
 
-    st.subheader("📊 Your Profile")
+    st.subheader("📊 Your Personality Map")
     st.pyplot(create_radar_chart(answers))
 
     hobbies = suggest_hobbies(answers, user_input, age, fitness)
@@ -234,4 +199,4 @@ if st.button("✨ Suggest Hobbies"):
         for i, hobby in enumerate(hobbies):
             cols[i % 3].write(hobby)
     else:
-        st.write("Try adding more details!")
+        st.write("Try increasing some ratings!")
