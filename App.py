@@ -22,7 +22,7 @@ st.markdown("""
 :root {
     --main-bg: #0B1208;
     --secondary-bg: #16220F;
-    --accent-blue: #1E3A8A;
+    --accent-green: #39FF14;  /* NEW GREEN */
     --text-color: #E5E5E5;
 }
 
@@ -37,12 +37,27 @@ div.stSlider, div.stTextArea, input, textarea {
     color: var(--text-color) !important;
 }
 
+/* SLIDER TRACK + HANDLE */
+.stSlider > div[data-baseweb="slider"] > div > div {
+    background-color: var(--accent-green) !important;
+}
+
+.stSlider > div[data-baseweb="slider"] span {
+    background-color: var(--accent-green) !important;
+}
+
+/* BUTTON */
 .stButton>button {
     background-color: var(--main-bg);
     color: var(--text-color);
-    border: 1px solid var(--accent-blue);
+    border: 1px solid var(--accent-green);
     border-radius: 12px;
     font-weight: bold;
+}
+
+.stButton>button:hover {
+    background-color: var(--accent-green);
+    color: black;
 }
 
 h1, h2, h3 {
@@ -102,7 +117,6 @@ def create_radar_chart(ans):
     labels = list(ans.keys())
     values = list(ans.values())
 
-    # normalize (1–5 → 0–1)
     values = [v / 5 for v in values]
 
     values.append(values[0])
@@ -114,8 +128,9 @@ def create_radar_chart(ans):
     fig.patch.set_facecolor("#0B1208")
     ax.set_facecolor("#16220F")
 
-    ax.plot(angles, values)
-    ax.fill(angles, values, alpha=0.25)
+    # GREEN instead of default line color
+    ax.plot(angles, values, color="#39FF14")
+    ax.fill(angles, values, alpha=0.25, color="#39FF14")
 
     ax.set_xticks(angles[:-1])
     ax.set_xticklabels(labels, color="white", fontsize=8)
@@ -173,7 +188,6 @@ def suggest_hobbies(ans, text, age, fitness):
     if ans["helping"] >= 4:
         hobbies += ["🤝 Volunteering"]
 
-    # TEXT MATCH
     text = text.lower()
     if "art" in text:
         hobbies.append("🎨 Digital Art")
