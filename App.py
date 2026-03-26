@@ -38,58 +38,38 @@ div.stSlider, div.stTextArea, input, textarea {
     color: var(--text-color) !important;
 }
 
-/* FORCE GREEN EVERYWHERE */
-* {
-    accent-color: var(--accent-green) !important;
-}
+/* -------- SLIDER FULL OVERRIDE -------- */
 
-/* -------- SLIDER -------- */
-
-/* Track */
+/* Track background */
 .stSlider div[data-baseweb="slider"] > div {
     background-color: #2a2a2a !important;
 }
 
 /* Filled track */
-.stSlider div[data-baseweb="slider"] > div > div,
+.stSlider div[data-baseweb="slider"] div[role="slider"] ~ div {
+    background-color: var(--accent-green) !important;
+}
+
+/* Main progress bar */
 .stSlider div[data-baseweb="slider"] > div > div > div {
     background-color: var(--accent-green) !important;
 }
 
-/* Handle */
+/* Slider handle (circle) */
 .stSlider div[data-baseweb="slider"] [role="slider"] {
     background-color: var(--accent-green) !important;
     border: 2px solid var(--accent-green) !important;
 }
 
-/* Remove glow / hover effects */
+/* Hover + active states */
 .stSlider div[data-baseweb="slider"] [role="slider"]:hover,
-.stSlider div[data-baseweb="slider"] [role="slider"]:active,
-.stSlider div[data-baseweb="slider"] [role="slider"]:focus {
-    box-shadow: none !important;
+.stSlider div[data-baseweb="slider"] [role="slider"]:active {
+    box-shadow: 0 0 10px var(--accent-green) !important;
 }
 
-/* -------- REMOVE VALUE POPUP -------- */
-
-/* This hides the floating number bubble */
-.stSlider div[data-baseweb="slider"] [data-testid="stThumbValue"] {
-    display: none !important;
-}
-
-/* Extra fallback (for different Streamlit versions) */
-.stSlider div[role="tooltip"] {
-    display: none !important;
-}
-
-/* Hide any span-based value labels */
-.stSlider span {
-    color: var(--accent-green) !important;
-}
-
-/* SVG elements */
-.stSlider svg * {
-    stroke: var(--accent-green) !important;
-    fill: var(--accent-green) !important;
+/* Remove ANY red remnants */
+.stSlider * {
+    accent-color: var(--accent-green) !important;
 }
 
 /* -------- BUTTON -------- */
@@ -156,7 +136,7 @@ for key, label in questions.items():
     answers[key] = st.slider(label, 1, 5, 3)
 
 # ------------------ TEXT INPUT ------------------
-user_input = st.text_area(" Tell me anything else you like:")
+user_input = st.text_area("💬 Tell me anything else you like:")
 st.divider()
 
 # ------------------ RADAR CHART ------------------
