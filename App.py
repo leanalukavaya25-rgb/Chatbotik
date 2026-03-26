@@ -38,7 +38,12 @@ div.stSlider, div.stTextArea, input, textarea {
     color: var(--text-color) !important;
 }
 
-/* -------- SLIDER FULL OVERRIDE -------- */
+/* FORCE GREEN EVERYWHERE */
+* {
+    accent-color: var(--accent-green) !important;
+}
+
+/* -------- SLIDER FULL CONTROL -------- */
 
 /* Track background */
 .stSlider div[data-baseweb="slider"] > div {
@@ -46,30 +51,41 @@ div.stSlider, div.stTextArea, input, textarea {
 }
 
 /* Filled track */
-.stSlider div[data-baseweb="slider"] div[role="slider"] ~ div {
-    background-color: var(--accent-green) !important;
-}
-
-/* Main progress bar */
+.stSlider div[data-baseweb="slider"] > div > div,
 .stSlider div[data-baseweb="slider"] > div > div > div {
     background-color: var(--accent-green) !important;
 }
 
-/* Slider handle (circle) */
+/* Handle */
 .stSlider div[data-baseweb="slider"] [role="slider"] {
     background-color: var(--accent-green) !important;
     border: 2px solid var(--accent-green) !important;
 }
 
-/* Hover + active states */
+/* Remove glow */
 .stSlider div[data-baseweb="slider"] [role="slider"]:hover,
-.stSlider div[data-baseweb="slider"] [role="slider"]:active {
-    box-shadow: 0 0 10px var(--accent-green) !important;
+.stSlider div[data-baseweb="slider"] [role="slider"]:active,
+.stSlider div[data-baseweb="slider"] [role="slider"]:focus {
+    box-shadow: none !important;
 }
 
-/* Remove ANY red remnants */
+/* -------- REMOVE POPUP -------- */
+.stSlider div[data-baseweb="slider"] [data-testid="stThumbValue"],
+.stSlider div[role="tooltip"] {
+    display: none !important;
+}
+
+/* -------- FORCE ALL TEXT IN SLIDER GREEN -------- */
+.stSlider div[data-baseweb="slider"] div,
+.stSlider div[data-baseweb="slider"] span,
 .stSlider * {
-    accent-color: var(--accent-green) !important;
+    color: var(--accent-green) !important;
+}
+
+/* SVG elements */
+.stSlider svg * {
+    stroke: var(--accent-green) !important;
+    fill: var(--accent-green) !important;
 }
 
 /* -------- BUTTON -------- */
