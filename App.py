@@ -31,48 +31,64 @@ body, .stApp {
     color: var(--text-color);
 }
 
-/* INPUTS */
+/* INPUT BOXES */
 div.stSlider, div.stTextArea, input, textarea {
     background-color: var(--secondary-bg) !important;
     border-radius: 12px;
     color: var(--text-color) !important;
 }
 
-/* -------- SLIDER FULL OVERRIDE -------- */
+/* FORCE REMOVE ALL RED */
+* {
+    accent-color: var(--accent-green) !important;
+}
 
-/* Track background */
+/* SLIDER TRACK */
 .stSlider div[data-baseweb="slider"] > div {
     background-color: #2a2a2a !important;
 }
 
-/* Filled track */
-.stSlider div[data-baseweb="slider"] div[role="slider"] ~ div {
+/* FILLED TRACK */
+.stSlider div[data-baseweb="slider"] > div > div {
     background-color: var(--accent-green) !important;
 }
 
-/* Main progress bar */
+/* INNER LINE */
 .stSlider div[data-baseweb="slider"] > div > div > div {
     background-color: var(--accent-green) !important;
 }
 
-/* Slider handle (circle) */
+/* HANDLE */
 .stSlider div[data-baseweb="slider"] [role="slider"] {
     background-color: var(--accent-green) !important;
     border: 2px solid var(--accent-green) !important;
 }
 
-/* Hover + active states */
+/* HOVER / ACTIVE */
 .stSlider div[data-baseweb="slider"] [role="slider"]:hover,
-.stSlider div[data-baseweb="slider"] [role="slider"]:active {
-    box-shadow: 0 0 10px var(--accent-green) !important;
+.stSlider div[data-baseweb="slider"] [role="slider"]:active,
+.stSlider div[data-baseweb="slider"] [role="slider"]:focus {
+    box-shadow: 0 0 12px var(--accent-green) !important;
 }
 
-/* Remove ANY red remnants */
-.stSlider * {
-    accent-color: var(--accent-green) !important;
+/* VALUE NUMBER */
+.stSlider div[data-baseweb="slider"] [role="slider"] div {
+    color: var(--accent-green) !important;
+    font-weight: bold;
 }
 
-/* -------- BUTTON -------- */
+/* FLOATING LABEL */
+.stSlider span {
+    color: var(--accent-green) !important;
+}
+
+/* SVG ELEMENTS */
+.stSlider svg * {
+    stroke: var(--accent-green) !important;
+    fill: var(--accent-green) !important;
+}
+
+/* BUTTON */
 .stButton>button {
     background-color: var(--main-bg);
     color: var(--text-color);
@@ -100,7 +116,7 @@ try:
 except:
     pass
 
-# ------------------ TITLE ------------------
+# ------------------ TITLE (UNCHANGED) ------------------
 st.title("🎨🏀⚽ Find Your Hobby ♟️👩🏻‍🍳🎾")
 st.write("Rate each statement from 1 (Hate) to 5 (Love)")
 st.divider()
@@ -136,7 +152,7 @@ for key, label in questions.items():
     answers[key] = st.slider(label, 1, 5, 3)
 
 # ------------------ TEXT INPUT ------------------
-user_input = st.text_area("💬 Tell me anything else you like:")
+user_input = st.text_area(" Tell me anything else you like:")
 st.divider()
 
 # ------------------ RADAR CHART ------------------
