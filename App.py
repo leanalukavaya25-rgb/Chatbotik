@@ -22,7 +22,7 @@ st.markdown("""
 :root {
     --main-bg: #0B1208;
     --secondary-bg: #16220F;
-    --accent-green: #39FF14;  /* NEW GREEN */
+    --accent-green: #39FF14;
     --text-color: #E5E5E5;
 }
 
@@ -31,22 +31,48 @@ body, .stApp {
     color: var(--text-color);
 }
 
+/* INPUTS */
 div.stSlider, div.stTextArea, input, textarea {
     background-color: var(--secondary-bg) !important;
     border-radius: 12px;
     color: var(--text-color) !important;
 }
 
-/* SLIDER TRACK + HANDLE */
-.stSlider > div[data-baseweb="slider"] > div > div {
+/* -------- SLIDER FULL OVERRIDE -------- */
+
+/* Track background */
+.stSlider div[data-baseweb="slider"] > div {
+    background-color: #2a2a2a !important;
+}
+
+/* Filled track */
+.stSlider div[data-baseweb="slider"] div[role="slider"] ~ div {
     background-color: var(--accent-green) !important;
 }
 
-.stSlider > div[data-baseweb="slider"] span {
+/* Main progress bar */
+.stSlider div[data-baseweb="slider"] > div > div > div {
     background-color: var(--accent-green) !important;
 }
 
-/* BUTTON */
+/* Slider handle (circle) */
+.stSlider div[data-baseweb="slider"] [role="slider"] {
+    background-color: var(--accent-green) !important;
+    border: 2px solid var(--accent-green) !important;
+}
+
+/* Hover + active states */
+.stSlider div[data-baseweb="slider"] [role="slider"]:hover,
+.stSlider div[data-baseweb="slider"] [role="slider"]:active {
+    box-shadow: 0 0 10px var(--accent-green) !important;
+}
+
+/* Remove ANY red remnants */
+.stSlider * {
+    accent-color: var(--accent-green) !important;
+}
+
+/* -------- BUTTON -------- */
 .stButton>button {
     background-color: var(--main-bg);
     color: var(--text-color);
@@ -60,6 +86,7 @@ div.stSlider, div.stTextArea, input, textarea {
     color: black;
 }
 
+/* TEXT */
 h1, h2, h3 {
     color: var(--text-color);
 }
@@ -128,9 +155,8 @@ def create_radar_chart(ans):
     fig.patch.set_facecolor("#0B1208")
     ax.set_facecolor("#16220F")
 
-    # GREEN instead of default line color
-    ax.plot(angles, values, color="#39FF14")
-    ax.fill(angles, values, alpha=0.25, color="#39FF14")
+    ax.plot(angles, values, color="#39FF14", linewidth=2)
+    ax.fill(angles, values, color="#39FF14", alpha=0.25)
 
     ax.set_xticks(angles[:-1])
     ax.set_xticklabels(labels, color="white", fontsize=8)
