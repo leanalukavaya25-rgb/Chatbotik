@@ -31,64 +31,68 @@ body, .stApp {
     color: var(--text-color);
 }
 
-/* INPUT BOXES */
+/* INPUTS */
 div.stSlider, div.stTextArea, input, textarea {
     background-color: var(--secondary-bg) !important;
     border-radius: 12px;
     color: var(--text-color) !important;
 }
 
-/* FORCE REMOVE ALL RED */
+/* FORCE GREEN EVERYWHERE */
 * {
     accent-color: var(--accent-green) !important;
 }
 
-/* SLIDER TRACK */
+/* -------- SLIDER -------- */
+
+/* Track */
 .stSlider div[data-baseweb="slider"] > div {
     background-color: #2a2a2a !important;
 }
 
-/* FILLED TRACK */
-.stSlider div[data-baseweb="slider"] > div > div {
-    background-color: var(--accent-green) !important;
-}
-
-/* INNER LINE */
+/* Filled track */
+.stSlider div[data-baseweb="slider"] > div > div,
 .stSlider div[data-baseweb="slider"] > div > div > div {
     background-color: var(--accent-green) !important;
 }
 
-/* HANDLE */
+/* Handle */
 .stSlider div[data-baseweb="slider"] [role="slider"] {
     background-color: var(--accent-green) !important;
     border: 2px solid var(--accent-green) !important;
 }
 
-/* HOVER / ACTIVE */
+/* Remove glow / hover effects */
 .stSlider div[data-baseweb="slider"] [role="slider"]:hover,
 .stSlider div[data-baseweb="slider"] [role="slider"]:active,
 .stSlider div[data-baseweb="slider"] [role="slider"]:focus {
-    box-shadow: 0 0 12px var(--accent-green) !important;
+    box-shadow: none !important;
 }
 
-/* VALUE NUMBER */
-.stSlider div[data-baseweb="slider"] [role="slider"] div {
-    color: var(--accent-green) !important;
-    font-weight: bold;
+/* -------- REMOVE VALUE POPUP -------- */
+
+/* This hides the floating number bubble */
+.stSlider div[data-baseweb="slider"] [data-testid="stThumbValue"] {
+    display: none !important;
 }
 
-/* FLOATING LABEL */
+/* Extra fallback (for different Streamlit versions) */
+.stSlider div[role="tooltip"] {
+    display: none !important;
+}
+
+/* Hide any span-based value labels */
 .stSlider span {
     color: var(--accent-green) !important;
 }
 
-/* SVG ELEMENTS */
+/* SVG elements */
 .stSlider svg * {
     stroke: var(--accent-green) !important;
     fill: var(--accent-green) !important;
 }
 
-/* BUTTON */
+/* -------- BUTTON -------- */
 .stButton>button {
     background-color: var(--main-bg);
     color: var(--text-color);
@@ -116,7 +120,7 @@ try:
 except:
     pass
 
-# ------------------ TITLE (UNCHANGED) ------------------
+# ------------------ TITLE ------------------
 st.title("🎨🏀⚽ Find Your Hobby ♟️👩🏻‍🍳🎾")
 st.write("Rate each statement from 1 (Hate) to 5 (Love)")
 st.divider()
